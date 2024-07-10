@@ -4,7 +4,10 @@ import seaborn as sns
 import numpy as np
 import matplotlib.pyplot as plt
 import matplotlib as mpl
-from ibc_public.connectivity.utils_plot import insert_stats, wrap_labels
+
+# add utils to path
+sys.path.append(os.path.join(os.path.dirname(__file__), ".."))
+from utils.plot import insert_stats, wrap_labels
 
 sns.set_theme()
 sns.set_style("whitegrid")

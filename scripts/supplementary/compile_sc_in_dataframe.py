@@ -1,8 +1,11 @@
 import os
 from glob import glob
 import pandas as pd
-from ibc_public.connectivity.utils_fc_estimation import get_ses_modality
 from nilearn.connectome import sym_matrix_to_vec
+
+# add utils to path
+sys.path.append(os.path.join(os.path.dirname(__file__), ".."))
+from utils.fc_estimation import get_ses_modality
 
 ### create sc_data dataframe for native space
 cache = DATA_ROOT = "/storage/store2/work/haggarwa/"

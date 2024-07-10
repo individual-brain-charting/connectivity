@@ -1,10 +1,3 @@
-from ibc_public.utils_connectivity import (
-    _get_tr,
-    get_ses_modality,
-    _get_confounds,
-    _update_data,
-    get_connectomes,
-)
 from ibc_public.utils_data import DERIVATIVES
 from glob import glob
 import os
@@ -17,6 +10,16 @@ import numpy as np
 from tqdm import tqdm
 from joblib import Parallel, delayed
 from scipy.stats import mannwhitneyu
+
+# add utils to path
+sys.path.append(os.path.join(os.path.dirname(__file__), ".."))
+from utils.connectivity import (
+    _get_tr,
+    get_ses_modality,
+    _get_confounds,
+    _update_data,
+    get_connectomes,
+)
 
 HCP_ROOT = "/storage/store/data/HCP900"
 

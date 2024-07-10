@@ -9,7 +9,10 @@ from joblib import Parallel, delayed
 from sklearn import preprocessing
 import numpy as np
 from scipy.stats import mannwhitneyu
-from ibc_public.connectivity.utils_plot import (
+
+# add utils to path
+sys.path.append(os.path.join(os.path.dirname(__file__), ".."))
+from utils.plot import (
     fit_classifier,
     get_clas_cov_measure,
     plot_full_weight_matrix,

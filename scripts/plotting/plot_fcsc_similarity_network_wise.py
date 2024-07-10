@@ -5,7 +5,10 @@ import numpy as np
 from nilearn.connectome import vec_to_sym_matrix
 from nilearn import datasets
 from sklearn import preprocessing
-from ibc_public.connectivity.utils_plot import (
+
+# add utils to path
+sys.path.append(os.path.join(os.path.dirname(__file__), ".."))
+from utils.plot import (
     get_network_labels,
     get_lower_tri_heatmap,
     mean_connectivity,

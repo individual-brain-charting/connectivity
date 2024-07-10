@@ -1,5 +1,6 @@
 """This script trains a classifier on external GBU data (from Mantini et al.
  2012) and tests on IBC GBU"""
+
 import pandas as pd
 import numpy as np
 import os
@@ -15,7 +16,10 @@ from matplotlib import pyplot as plt
 import seaborn as sns
 import time
 from sklearn.preprocessing import RobustScaler, StandardScaler
-from ibc_public.connectivity.utils_plot import wrap_labels
+
+# add utils to path
+sys.path.append(os.path.join(os.path.dirname(__file__), ".."))
+from utils.plot import wrap_labels
 
 #### train on external test on IBC GBU ###
 cache = DATA_ROOT = "/storage/store2/work/haggarwa/"

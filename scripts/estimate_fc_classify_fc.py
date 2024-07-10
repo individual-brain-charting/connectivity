@@ -6,14 +6,16 @@ import time
 
 import pandas as pd
 import seaborn as sns
-from ibc_public.connectivity.utils_fc_estimation import (
+from nilearn import datasets
+from joblib import Parallel, delayed
+
+# add utils to path
+sys.path.append(os.path.join(os.path.dirname(__file__), ".."))
+from utils.fc_estimation import (
     get_connectomes,
     get_time_series,
 )
-from ibc_public.connectivity.utils_fc_classification import do_cross_validation
-from nilearn import datasets
-
-from joblib import Parallel, delayed
+from utils.fc_classification import do_cross_validation
 
 sns.set_theme(context="talk", style="whitegrid")
 

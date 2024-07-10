@@ -7,11 +7,14 @@ import time
 import pandas as pd
 from nilearn import datasets
 from joblib import Parallel, delayed
-from ibc_public.connectivity.utils_similarity import (
+
+# add utils to path
+sys.path.append(os.path.join(os.path.dirname(__file__), ".."))
+from utils.similarity import (
     mean_connectivity,
     get_similarity,
 )
-from ibc_public.connectivity.utils_fc_estimation import (
+from utils.fc_estimation import (
     get_connectomes,
     get_time_series,
 )

@@ -13,7 +13,6 @@ and https://nilearn.github.io/stable/connectivity/connectome_extraction.html
 Not used anywhere in the analysis, but demos fc calculation
 """
 
-
 import os
 from glob import glob
 import numpy as np

@@ -5,7 +5,10 @@ import numpy as np
 from nilearn.connectome import vec_to_sym_matrix
 import matplotlib.pyplot as plt
 from nilearn import datasets
-from ibc_public.connectivity.utils_plot import get_lower_tri_heatmap
+
+# add utils to path
+sys.path.append(os.path.join(os.path.dirname(__file__), ".."))
+from utils.plot import get_lower_tri_heatmap
 
 sns.set_theme()
 sns.set_style("whitegrid")

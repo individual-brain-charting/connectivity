@@ -2,7 +2,10 @@ import os
 import pandas as pd
 import seaborn as sns
 import matplotlib.pyplot as plt
-from ibc_public.connectivity.utils_plot import (
+
+# add utils to path
+sys.path.append(os.path.join(os.path.dirname(__file__), ".."))
+from utils.plot import (
     wrap_labels,
     insert_stats_reliability,
 )

@@ -12,11 +12,15 @@ See tck2connectome doc: https://mrtrix.readthedocs.io/en/latest/reference/comman
 Discussion on using original SIFT2 weights (calculated before non-linear 
 transformation of tracts): https://community.mrtrix.org/t/are-sift2-weights-still-interpretable-following-non-linear-transformation/6162
 """
+
 import os
 from nilearn import datasets
 from ibc_public.utils_data import get_subject_session, DERIVATIVES
 from joblib import Parallel, delayed
-from ibc_public.connectivity.utils_sc_estimation import (
+
+# add utils to path
+sys.path.append(os.path.join(os.path.dirname(__file__), ".."))
+from utils.sc_estimation import (
     antsRegister_b0dwi2mni,
     mrconvert_nifti2mif,
     warpinit_create_mni_invidentitywarp,
@@ -178,9 +182,11 @@ if __name__ == "__main__":
     # get sessions with diffusion data
     subject_sessions = sorted(get_subject_session("anat1"))
     sub_ses = {
-        subject_session[0]: "ses-12"
-        if subject_session[0] in ["sub-01", "sub-15"]
-        else subject_session[1]
+        subject_session[0]: (
+            "ses-12"
+            if subject_session[0] in ["sub-01", "sub-15"]
+            else subject_session[1]
+        )
         for subject_session in subject_sessions
     }
     results = Parallel(n_jobs=12, verbose=2, backend="loky")(
