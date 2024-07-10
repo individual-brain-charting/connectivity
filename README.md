@@ -2,10 +2,13 @@
 
 Code repository for connectivity analysis on IBC data and others.
 
+`utils` contains reusable functions for the analysis.
+`scripts` contains the main scripts that use those utility functions.
+
 ## Structural Connectivity (SC) Estimation
 
 ```bash
-python estimate_sc.py
+python scripts/estimate_sc.py
 ```
 
 <!-- ### Steps
@@ -16,11 +19,11 @@ python estimate_sc.py
 ## Functional Connectivity (FC) Estimation and Classification
 
 ```bash
-python estimate_fc_classify_fc.py
+python scripts/estimate_fc_classify_fc.py
 ```
 
 ## Similarity between FC and SC
 
 ```bash
-python estimate_fc_calculate_similarity.py
+python scripts/estimate_fc_calculate_similarity.py
 ```
