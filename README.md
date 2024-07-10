@@ -3,6 +3,7 @@
 Code repository for connectivity analysis on IBC data and others.
 
 `utils` contains reusable functions for the analysis.
+
 `scripts` contains the main scripts that use those utility functions.
 
 ## Structural Connectivity (SC) Estimation
