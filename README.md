@@ -17,14 +17,20 @@ python scripts/estimate_sc.py
 2. In addition, the script `estimate_sc.py` also transforms the given atlas to the native individual space. This way we can calculate two kinds of structural connectivity matrices: one in the MNI space and the other in the native individual space.
 3. Finally, the two connectomes are calculated using MRtrix's `tck2connectome` function in the same script `estimate_sc.py`. -->
 
-## Functional Connectivity (FC) Estimation and Classification
+## Functional Connectivity (FC) Estimation
 
 ```bash
-python scripts/estimate_fc_classify_fc.py
+python scripts/estimate_fc.py
+```
+
+## FC Classification
+
+```bash
+python scripts/classify_fc.py
 ```
 
 ## Similarity between FC and SC
 
 ```bash
-python scripts/estimate_fc_calculate_similarity.py
+python scripts/calculate_fcsc_similarity.py
 ```

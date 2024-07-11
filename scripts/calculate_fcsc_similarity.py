@@ -1,5 +1,4 @@
-"""This script estimates functional connectivity (if needed) and then
- calculates the similarity between functional connectivity
+"""This script calculates the similarity between functional connectivity
  matrices from different tasks and structural connectivity"""
 
 import os
@@ -74,37 +73,9 @@ def all_combinations(task_pairs, cov_estimators, measures):
                 yield task_pair, cov, measure
 
 
-if calculate_connectivity:
-    # get the atlas
-    atlas = datasets.fetch_atlas_schaefer_2018(
-        data_dir=cache, resolution_mm=2, n_rois=n_parcels
-    )
-    # use the atlas to extract time series for each task in parallel
-    # get_time_series returns a dataframe with
-    # the time series for each task, consisting of runs x subjects
-    print("Time series extraction...")
-    data = Parallel(n_jobs=n_jobs, verbose=0)(
-        delayed(get_time_series)(task, atlas, cache) for task in tasks
-    )
-    # concatenate all the dataframes so we have a single dataframe
-    # with the time series from all tasks
-    data = pd.concat(data)
-    # estimate the connectivity matrices for each cov estimator in parallel
-    # get_connectomes returns a dataframe with two columns each corresponding
-    # to the partial correlation and correlation connectome from each cov
-    # estimator
-    print("Connectivity estimation...")
-    data = Parallel(n_jobs=n_jobs, verbose=0)(
-        delayed(get_connectomes)(cov, data, n_jobs) for cov in cov_estimators
-    )
-    # concatenate the dataframes so we have a single dataframe
-    # with the connectomes from all cov estimators
-    cols_to_use = data[0].columns.difference(data[1].columns)
-    data = pd.concat([data[1], data[0][cols_to_use]], axis=1)
-    data.reset_index(inplace=True, drop=True)
-else:
-    data = pd.read_pickle(fc_data_path)
-    sc_data = pd.read_pickle(sc_data_path)
+data = pd.read_pickle(fc_data_path)
+sc_data = pd.read_pickle(sc_data_path)
+
 all_connectivity = mean_connectivity(data, tasks, cov_estimators, measures)
 all_connectivity = pd.concat([all_connectivity, sc_data], axis=0)
 

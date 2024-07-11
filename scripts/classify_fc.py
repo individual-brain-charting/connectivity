@@ -1,5 +1,4 @@
-"""Pipeline to estimate functional connectivity matrices (if needed) and then
- perform FC classification over runs, subjects and tasks."""
+"""Perform FC classification over runs, subjects and tasks."""
 
 import os
 import time
@@ -28,8 +27,6 @@ n_parcels = 400  # or 400
 n_splits = 50
 # do within each task or across all tasks
 within_task = True
-# connectivity calculation parameters
-calculate_connectivity = False
 # we will use the resting state and all the movie-watching sessions
 tasks = ["RestingState", "Raiders", "GoodBadUgly", "MonkeyKingdom", "Mario"]
 # cov estimators
@@ -68,45 +65,6 @@ if n_parcels == 400:
 elif n_parcels == 200:
     # with compcorr
     fc_data_path = os.path.join(cache, "connectomes_200_comprcorr")
-
-### CALCULATE CONNECTIVITY IF NOT ALREADY CALCULATED
-if calculate_connectivity:
-    # get the atlas
-    atlas = datasets.fetch_atlas_schaefer_2018(
-        data_dir=cache, resolution_mm=2, n_rois=n_parcels
-    )
-    # use the atlas to extract time series for each task in parallel
-    # get_time_series returns a dataframe with the time series for each task,
-    # consisting of runs x subjects
-    print("Time series extraction...")
-    data = Parallel(n_jobs=n_jobs, verbose=0)(
-        delayed(get_time_series)(task, atlas, cache) for task in tasks
-    )
-    # concatenate all the dataframes so we have a single dataframe with the
-    # time series from all tasks
-    data = pd.concat(data)
-    # estimate the connectivity matrices for each cov estimator in parallel
-    # get_connectomes returns a dataframe with two columns each corresponding
-    # to the partial correlation and correlation connectome from each cov
-    # estimator
-    print("Connectivity estimation...")
-    data = Parallel(n_jobs=20, verbose=0)(
-        delayed(get_connectomes)(cov, data, n_jobs) for cov in cov_estimators
-    )
-    # concatenate the dataframes so we have a single dataframe with the
-    # connectomes from all cov estimators
-    common_cols = ["time_series", "subject_ids", "run_labels", "tasks"]
-    data_ts = data[0][common_cols]
-    for df in data:
-        df.drop(columns=common_cols, inplace=True)
-    data.append(data_ts)
-    data = pd.concat(data, axis=1)
-    data.reset_index(inplace=True, drop=True)
-    # save the data
-    data.to_pickle(fc_data_path)
-#### LOAD CONNECTIVITY IF ALREADY CALCULATED
-else:
-    data = pd.read_pickle(fc_data_path)
 
 
 # generator to get all the combinations of classification
@@ -147,6 +105,9 @@ def all_combinations(classify, tasks, connectivity_measures, within_task):
             for connectivity_measure in connectivity_measures:
                 yield classes, task, connectivity_measure
 
+
+#### LOAD CONNECTIVITY
+data = pd.read_pickle(fc_data_path)
 
 #### RUN CLASSIFICATION
 # run classification for all combinations of classification, task and
