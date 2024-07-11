@@ -37,6 +37,10 @@ def get_tr(task, dataset="ibc"):
             raise ValueError(f"Unknown task {task}")
     elif dataset == "hcp":
         repetition_time = 0.72
+    elif dataset == "archi":
+        repetition_time = 2.4
+    elif dataset == "thelittleprince":
+        repetition_time = 2
 
     return repetition_time
 
@@ -66,6 +70,7 @@ def get_niftis(task, subject, session, data_root_path, dataset="ibc"):
         _run_files = glob(
             os.path.join(
                 data_root_path,
+                "derivatives",
                 subject,
                 session,
                 "func",
@@ -114,6 +119,25 @@ def get_niftis(task, subject, session, data_root_path, dataset="ibc"):
                     run_label = "run-01"
                 elif direction == "RL":
                     run_label = "run-02"
+            run_labels.append(run_label)
+    elif dataset == "archi":
+        run_files = glob(
+            os.path.join(
+                data_root_path,
+                "derivatives",
+                subject,
+                "func",
+                f"*{task}*.nii.gz",
+            )
+        )
+        run_labels = ["run-01" for _ in run_files]
+    elif dataset == "thelittleprince":
+        run_files = glob(
+            os.path.join(data_root_path, subject, "func", "*.nii.gz")
+        )
+        run_labels = []
+        for run in run_files:
+            run_label = os.path.basename(run).split("_")[2]
             run_labels.append(run_label)
 
     return run_files, run_labels
@@ -179,7 +203,7 @@ def _find_hcp_subjects(session_names, data_root_path):
     return sub_ses
 
 
-def get_ses_modality(task, dataset="ibc"):
+def get_ses_modality(task, data_root_path, dataset="ibc"):
     """Get session numbers and modality for given task
 
     Parameters
@@ -219,6 +243,8 @@ def get_ses_modality(task, dataset="ibc"):
             session_names = ["archi1", "archi2"]
         elif task == "Hcp":
             session_names = ["hcp1", "hcp2"]
+        elif task == "LePetitPrince":
+            session_names = ["lpp1", "lpp2"]
         # get session numbers for each subject
         # returns a list of tuples with subject and session number
         subject_sessions = sorted(get_subject_session(session_names))
@@ -279,6 +305,32 @@ def get_ses_modality(task, dataset="ibc"):
         modality = "functional"
 
         # create dictionary with subject as key and session number as value
-        sub_ses = _find_hcp_subjects(session_names)
+        sub_ses = _find_hcp_subjects(session_names, data_root_path)
+    elif dataset == "archi":
+        archi_tasks = [
+            "ArchiStandard",
+            "ArchiSpatial",
+            "ArchiSocial",
+            "ArchiEmotional",
+        ]
+        if task in archi_tasks:
+            # no sessions for archi
+            # just need to get all subject ids
+            subs = glob(os.path.join(data_root_path, "derivatives", "sub-*"))
+            sub_ses = {}
+            for sub in subs:
+                sub_ses[sub] = None
+        else:
+            raise ValueError(f"Unknown archi task {task}")
+    elif dataset == "thelittleprince":
+        if task == "lppFR":
+            # no sessions for thelittleprince
+            # but only need the french subject ids
+            subs = glob(os.path.join(data_root_path, "derivatives", "sub-FR*"))
+            sub_ses = {}
+            for sub in subs:
+                sub_ses[sub] = None
+        else:
+            raise ValueError(f"Unknown thelittleprince task {task}")
 
     return sub_ses, modality
