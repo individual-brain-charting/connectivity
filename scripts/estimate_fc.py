@@ -1,8 +1,7 @@
 """Pipeline to estimate functional connectivity matrices"""
 
 import os
-import time
-
+import sys
 import pandas as pd
 import seaborn as sns
 from nilearn import datasets
@@ -14,7 +13,6 @@ from utils.fc_estimation import (
     get_connectomes,
     get_time_series,
 )
-from utils.fc_classification import do_cross_validation
 
 sns.set_theme(context="talk", style="whitegrid")
 
