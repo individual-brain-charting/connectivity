@@ -47,7 +47,7 @@ def get_tr(task, dataset="ibc"):
 
 def get_niftis(task, subject, session, data_root_path, dataset="ibc"):
     """Get nifti files of preprocessed BOLD data for the given task, subject,
-    session and dataset
+    session and dataset.
 
     Parameters
     ----------
@@ -133,13 +133,21 @@ def get_niftis(task, subject, session, data_root_path, dataset="ibc"):
         run_labels = ["run-01" for _ in run_files]
     elif dataset == "thelittleprince":
         run_files = glob(
-            os.path.join(data_root_path, subject, "func", "*.nii.gz")
+            os.path.join(
+                data_root_path,
+                "ds003643",
+                "derivatives",
+                subject,
+                "func",
+                "*.nii.gz",
+            )
         )
         run_labels = []
         for run in run_files:
             run_label = os.path.basename(run).split("_")[2]
             run_labels.append(run_label)
-
+    else:
+        raise ValueError(f"Unknown dataset {dataset}")
     return run_files, run_labels
 
 
@@ -239,12 +247,21 @@ def get_ses_modality(task, data_root_path, dataset="ibc"):
         elif task == "Mario":
             # session names with mario gameplay data
             session_names = ["mario1"]
-        elif task == "Archi":
-            session_names = ["archi1", "archi2"]
-        elif task == "Hcp":
-            session_names = ["hcp1", "hcp2"]
+        elif task in [
+            "ArchiStandard",
+            "ArchiSpatial",
+            "ArchiSocial",
+            "ArchiEmotional",
+        ]:
+            session_names = ["archi"]
+        elif task in ["HcpEmotion", "HcpGambling", "HcpLanguage", "HcpMotor"]:
+            session_names = ["hcp1"]
+        elif task in ["HcpRelational", "HcpSocial", "HcpWm"]:
+            session_names = ["hcp2"]
         elif task == "LePetitPrince":
             session_names = ["lpp1", "lpp2"]
+        else:
+            raise ValueError(f"Unknown ibc task {task}")
         # get session numbers for each subject
         # returns a list of tuples with subject and session number
         subject_sessions = sorted(get_subject_session(session_names))
@@ -303,7 +320,6 @@ def get_ses_modality(task, data_root_path, dataset="ibc"):
         else:
             raise ValueError(f"Unknown HCP task {task}")
         modality = "functional"
-
         # create dictionary with subject as key and session number as value
         sub_ses = _find_hcp_subjects(session_names, data_root_path)
     elif dataset == "archi":
@@ -317,20 +333,29 @@ def get_ses_modality(task, data_root_path, dataset="ibc"):
             # no sessions for archi
             # just need to get all subject ids
             subs = glob(os.path.join(data_root_path, "derivatives", "sub-*"))
+            subs = [os.path.basename(sub) for sub in subs]
             sub_ses = {}
             for sub in subs:
-                sub_ses[sub] = None
+                sub_ses[sub] = ["ses-01"]
         else:
             raise ValueError(f"Unknown archi task {task}")
+        modality = "functional"
     elif dataset == "thelittleprince":
         if task == "lppFR":
             # no sessions for thelittleprince
             # but only need the french subject ids
-            subs = glob(os.path.join(data_root_path, "derivatives", "sub-FR*"))
+            subs = glob(
+                os.path.join(
+                    data_root_path, "ds003643", "derivatives", "sub-FR*"
+                )
+            )
+            subs = [os.path.basename(sub) for sub in subs]
             sub_ses = {}
             for sub in subs:
-                sub_ses[sub] = None
+                sub_ses[sub] = ["ses-01"]
         else:
             raise ValueError(f"Unknown thelittleprince task {task}")
-
+        modality = "functional"
+    else:
+        raise ValueError(f"Unknown dataset {dataset}")
     return sub_ses, modality
