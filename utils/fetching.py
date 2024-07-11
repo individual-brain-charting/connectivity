@@ -13,10 +13,10 @@ def get_tr(task, dataset="ibc"):
     ----------
     task : str
         Name of the task. Could be "RestingState", "GoodBadUgly", "Raiders",
-        "MonkeyKingdom", "Mario" if dataset is "ibc". If dataset is "hcp",
+        "MonkeyKingdom", "Mario" if dataset is "ibc". If dataset is "HCP900",
          all tasks have a repetition time of 0.72.
     dataset : str, optional
-        Which dataset to use, by default "ibc", could also be "hcp"
+        Which dataset to use, by default "ibc", could also be "HCP900"
 
     Returns
     -------
@@ -35,7 +35,7 @@ def get_tr(task, dataset="ibc"):
             repetition_time = 2
         else:
             raise ValueError(f"Unknown task {task}")
-    elif dataset == "hcp":
+    elif dataset == "HCP900":
         repetition_time = 0.72
     elif dataset == "archi":
         repetition_time = 2.4
@@ -58,7 +58,7 @@ def get_niftis(task, subject, session, data_root_path, dataset="ibc"):
     session : str
         session number
     dataset : str, optional
-        which dataset to use, by default "ibc", could also be "hcp"
+        which dataset to use, by default "ibc", could also be "HCP900"
 
     Returns
     -------
@@ -90,7 +90,7 @@ def get_niftis(task, subject, session, data_root_path, dataset="ibc"):
                 continue
             run_labels.append(run_label)
             run_files.append(run)
-    elif dataset == "hcp":
+    elif dataset == "HCP900":
         run_files = glob(
             os.path.join(
                 data_root_path,
@@ -160,7 +160,7 @@ def get_confounds(
     session : str
         session number
     dataset : str, optional
-        name of the dataset, by default "ibc". Could also be "hcp"
+        name of the dataset, by default "ibc". Could also be "HCP900"
 
     Returns
     -------
@@ -177,7 +177,7 @@ def get_confounds(
                 f"rp*{task}*{run_label}_bold*",
             )
         )[0]
-    elif dataset == "hcp":
+    elif dataset == "HCP900":
         return glob(
             os.path.join(
                 data_root_path,
@@ -284,7 +284,7 @@ def get_ses_modality(task, data_root_path, dataset="ibc"):
                     sub_ses[subject_session[0]] = []
                 sub_ses[subject_session[0]].append(subject_session[1])
 
-    elif dataset == "hcp":
+    elif dataset == "HCP900":
         hcp_tasks = [
             "EMOTION",
             "GAMBLING",
