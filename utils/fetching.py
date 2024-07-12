@@ -31,7 +31,13 @@ def get_tr(task, dataset="ibc"):
     if dataset == "ibc":
         if task == "RestingState":
             repetition_time = 0.76
-        elif task in ["GoodBadUgly", "Raiders", "MonkeyKingdom", "Mario"]:
+        elif task in [
+            "GoodBadUgly",
+            "Raiders",
+            "MonkeyKingdom",
+            "Mario",
+            "LePetitPrince",
+        ]:
             repetition_time = 2
         else:
             raise ValueError(f"Unknown task {task}")
@@ -84,10 +90,15 @@ def get_niftis(task, subject, session, data_root_path, dataset="ibc"):
             run_num = run_label.split("-")[-1]
             # skip repeats of run-01, run-02, run-03 done at the end of
             # the sessions in Raiders and GoodBadUgly
-            if task == "Raiders" and int(run_num) > 10:
+            if task == "Raiders" and int(run_num) > 8:
                 continue
-            elif task == "GoodBadUgly" and int(run_num) > 18:
+            elif (
+                task == "GoodBadUgly"
+                and int(run_num) > 17
+                and int(run_num) < 3
+            ):
                 continue
+
             run_labels.append(run_label)
             run_files.append(run)
     elif dataset == "HCP900":
@@ -169,7 +180,7 @@ def get_confounds(
         session number
     dataset : str, optional
         name of the dataset, by default "ibc". Could also be "HCP900" or
-        "archi"
+        "archi" or "thelittleprince"
 
     Returns
     -------
@@ -180,6 +191,7 @@ def get_confounds(
         return glob(
             os.path.join(
                 data_root_path,
+                "derivatives",
                 subject,
                 session,
                 "func",
@@ -205,6 +217,10 @@ def get_confounds(
                 f"rp_{subject}*{task}*.tsv",
             )
         )[0]
+    elif dataset == "thelittleprince":
+        raise ValueError("No confounds available for thelittleprince")
+    else:
+        raise ValueError(f"Unknown dataset {dataset}")
 
 
 def _find_hcp_subjects(session_names, data_root_path):

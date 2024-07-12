@@ -30,7 +30,14 @@ def _update_data(data, all_time_series, subject_ids, run_labels, tasks):
     return data
 
 
-def get_time_series(task, atlas, cache, dataset="ibc"):
+def _trim_timeseries(timeseries, n):
+    """Trim the time series to the given length"""
+    return timeseries[:n, :]
+
+
+def get_time_series(
+    task, atlas, data_root_path, dataset="ibc", trim_timeseries_to=None
+):
     """Use NiftiLabelsMasker to extract time series from nifti files.
 
     Parameters
@@ -39,10 +46,11 @@ def get_time_series(task, atlas, cache, dataset="ibc"):
         List of tasks to extract time series from.
     atlas : atlas object
         Atlas to use for extracting time series.
-    cache : str
-        Path to cache directory.
+    data_root_path : str
+        Path to data root directory.
     dataset : str, optional
-        Name of the dataset, by default "ibc". Could also be "hcp".
+        Name of the dataset, by default "ibc". Could also be "HCP9000" or
+        "archi" or "thelittleprince".
 
     Returns
     -------
@@ -60,7 +68,7 @@ def get_time_series(task, atlas, cache, dataset="ibc"):
     print(f"Getting time series for {task}...")
     masker = NiftiLabelsMasker(
         labels_img=atlas.maps,
-        standardize=True,
+        standardize="zscore_sample",
         low_pass=0.2,
         high_pass=0.01,
         t_r=repetition_time,
@@ -69,9 +77,9 @@ def get_time_series(task, atlas, cache, dataset="ibc"):
         memory_level=0,
         n_jobs=1,
     ).fit()
-    subject_sessions, _ = get_ses_modality(task, dataset)
-    if dataset == "hcp":
-        subject_sessions = dict(itertools.islice(subject_sessions.items(), 50))
+    subject_sessions, _ = get_ses_modality(
+        task=task, data_root_path=data_root_path, dataset=dataset
+    )
     all_time_series = []
     subject_ids = []
     run_labels_ = []
@@ -90,15 +98,26 @@ def get_time_series(task, atlas, cache, dataset="ibc"):
                 print(task)
                 print(subject, session)
                 print(run_label)
-
-                confounds = get_confounds(
-                    task, run_label, subject, session, data_root_path, dataset
-                )
-                compcor_confounds = high_variance_confounds(run)
-                confounds = np.hstack(
-                    (np.loadtxt(confounds), compcor_confounds)
-                )
+                if dataset == "thelittleprince":
+                    confounds = None
+                else:
+                    confounds = get_confounds(
+                        task,
+                        run_label,
+                        subject,
+                        session,
+                        data_root_path,
+                        dataset,
+                    )
+                    compcor_confounds = high_variance_confounds(run)
+                    confounds = np.hstack(
+                        (np.loadtxt(confounds), compcor_confounds)
+                    )
                 time_series = masker.transform(run, confounds=confounds)
+                if trim_timeseries_to is not None:
+                    time_series = _trim_timeseries(
+                        time_series, trim_timeseries_to
+                    )
                 all_time_series.append(time_series)
                 subject_ids.append(subject)
                 run_labels_.append(run_label)
@@ -129,22 +148,7 @@ def calculate_connectivity(X, cov_estimator):
     """
     # get the connectivity measure
     cov_estimator_ = clone(cov_estimator)
-    try:
-        cv = cov_estimator_.fit(X)
-    except FloatingPointError as error:
-        if isinstance(cov_estimator_, GraphicalLassoCV):
-            print(
-                "Caught a FloatingPointError, ",
-                "shrinking covariance beforehand...",
-            )
-            X = empirical_covariance(X, assume_centered=True)
-            X = shrunk_covariance(X, shrinkage=1)
-            cov_estimator_ = GraphicalLasso(
-                alpha=0.52, verbose=0, mode="cd", covariance="precomputed"
-            )
-            cv = cov_estimator_.fit(X)
-        else:
-            raise error
+    cv = cov_estimator_.fit(X)
     cv_correlation = sym_matrix_to_vec(cv.covariance_, discard_diagonal=True)
     cv_partial = sym_matrix_to_vec(-cv.precision_, discard_diagonal=True)
 
