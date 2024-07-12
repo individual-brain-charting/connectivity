@@ -168,7 +168,8 @@ def get_confounds(
     session : str
         session number
     dataset : str, optional
-        name of the dataset, by default "ibc". Could also be "HCP900"
+        name of the dataset, by default "ibc". Could also be "HCP900" or
+        "archi"
 
     Returns
     -------
@@ -194,6 +195,14 @@ def get_confounds(
                 "Results",
                 session,
                 "Movement_Regressors_dt.txt",
+            )
+        )[0]
+    elif dataset == "archi":
+        return glob(
+            os.path.join(
+                data_root_path,
+                "rpfiles",
+                f"rp_{subject}*{task}*.tsv",
             )
         )[0]
 
