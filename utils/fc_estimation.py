@@ -113,7 +113,13 @@ def get_time_series(
                     confounds = np.hstack(
                         (np.loadtxt(confounds), compcor_confounds)
                     )
-                time_series = masker.transform(run, confounds=confounds)
+                try:
+                    time_series = masker.transform(run, confounds=confounds)
+                except EOFError as e:
+                    print(e, run)
+                    with open("log_EOFError.txt", "w") as f:
+                        f.write(f"{run}\n")
+                    continue
                 if trim_timeseries_to is not None:
                     time_series = _trim_timeseries(
                         time_series, trim_timeseries_to

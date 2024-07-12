@@ -37,10 +37,21 @@ def get_tr(task, dataset="ibc"):
             "MonkeyKingdom",
             "Mario",
             "LePetitPrince",
+            "ArchiStandard",
+            "ArchiSpatial",
+            "ArchiSocial",
+            "ArchiEmotional",
+            "HcpEmotion",
+            "HcpGambling",
+            "HcpLanguage",
+            "HcpMotor",
+            "HcpRelational",
+            "HcpSocial",
+            "HcpWm",
         ]:
             repetition_time = 2
         else:
-            raise ValueError(f"Unknown task {task}")
+            raise ValueError(f"Dont know the TR for task {task}")
     elif dataset == "HCP900":
         repetition_time = 0.72
     elif dataset == "archi":
@@ -158,7 +169,7 @@ def get_niftis(task, subject, session, data_root_path, dataset="ibc"):
             run_label = os.path.basename(run).split("_")[2]
             run_labels.append(run_label)
     else:
-        raise ValueError(f"Unknown dataset {dataset}")
+        raise ValueError(f"Cant find niftis for dataset {dataset}")
     return run_files, run_labels
 
 
@@ -220,7 +231,7 @@ def get_confounds(
     elif dataset == "thelittleprince":
         raise ValueError("No confounds available for thelittleprince")
     else:
-        raise ValueError(f"Unknown dataset {dataset}")
+        raise ValueError(f"Cant find confounds for dataset {dataset}")
 
 
 def _find_hcp_subjects(session_names, data_root_path):
@@ -382,5 +393,5 @@ def get_ses_modality(task, data_root_path, dataset="ibc"):
             raise ValueError(f"Unknown thelittleprince task {task}")
         modality = "functional"
     else:
-        raise ValueError(f"Unknown dataset {dataset}")
+        raise ValueError(f"Cant find session numbers for dataset {dataset}")
     return sub_ses, modality
