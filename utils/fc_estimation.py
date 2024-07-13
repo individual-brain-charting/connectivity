@@ -107,10 +107,16 @@ def get_time_series(task, atlas, data_root_path, dataset="ibc"):
                         data_root_path,
                         dataset,
                     )
+                    confounds = np.loadtxt(confounds)
                     compcor_confounds = high_variance_confounds(run)
-                    confounds = np.hstack(
-                        (np.loadtxt(confounds), compcor_confounds)
-                    )
+                    # archi, ArchiSpatial, sub-01 confounds had an extra row
+                    try:
+                        confounds = np.hstack((confounds, compcor_confounds))
+                    except ValueError as e:
+                        with open("log_ValueError.txt", "w") as f:
+                            f.write(f"{e}\n")
+                            f.write(f"{run}\n")
+                # some HCP subjects throw EOFError
                 try:
                     time_series = masker.transform(run, confounds=confounds)
                 except EOFError as e:
