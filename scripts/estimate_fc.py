@@ -18,11 +18,15 @@ from utils.fc_estimation import (
 # kind of tasks to keep
 #  - "natural" for naturalistic tasks
 #  - "domain" for tasks from different domains
-tasktype = "domain"
+tasktype = "natural"
 # trim the time series to the given length, None to keep all
 # keeping 293 time points for natural tasks
 # 128 for domain tasks
-trim_length = 128 if tasktype == "domain" else 293
+# trim_length = 128 if tasktype == "domain" else 293
+
+# also try no trimming
+trim_length = None
+
 # cache and root output directory
 data_root = "/storage/store3/work/haggarwa/connectivity/data/"
 # results directory
@@ -81,7 +85,7 @@ dataset_task = {
 # output data paths
 timeseries_path = os.path.join(
     results,
-    f"timeseries_nparcels-{n_parcels}_tasktype-{tasktype}_trim-{trim_length}.pkl",
+    f"timeseries_nparcels-{n_parcels}_tasktype-{tasktype}.pkl",
 )
 fc_data_path = os.path.join(
     results,
@@ -144,7 +148,6 @@ else:
             atlas=atlas,
             data_root_path=dataset_root_path,
             dataset=dataset,
-            trim_timeseries_to=trim_length,
         )
         for dataset, task, dataset_root_path in generator_dataset_task(
             dataset_task, tasktype
@@ -164,7 +167,8 @@ else:
 # estimator
 print("Connectivity estimation...")
 data = Parallel(n_jobs=20, verbose=0)(
-    delayed(get_connectomes)(cov, data, n_jobs) for cov in cov_estimators
+    delayed(get_connectomes)(cov, data, n_jobs, trim_timeseries_to=trim_length)
+    for cov in cov_estimators
 )
 # concatenate the dataframes so we have a single dataframe with the
 # connectomes from all cov estimators

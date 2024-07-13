@@ -35,9 +35,7 @@ def _trim_timeseries(timeseries, n):
     return timeseries[:n, :]
 
 
-def get_time_series(
-    task, atlas, data_root_path, dataset="ibc", trim_timeseries_to=None
-):
+def get_time_series(task, atlas, data_root_path, dataset="ibc"):
     """Use NiftiLabelsMasker to extract time series from nifti files.
 
     Parameters
@@ -120,10 +118,6 @@ def get_time_series(
                     with open("log_EOFError.txt", "w") as f:
                         f.write(f"{run}\n")
                     continue
-                if trim_timeseries_to is not None:
-                    time_series = _trim_timeseries(
-                        time_series, trim_timeseries_to
-                    )
                 all_time_series.append(time_series)
                 subject_ids.append(subject)
                 run_labels_.append(run_label)
@@ -136,7 +130,7 @@ def get_time_series(
     return pd.DataFrame(data)
 
 
-def calculate_connectivity(X, cov_estimator):
+def calculate_connectivity(X, cov_estimator, trim_timeseries_to=None):
     """Fit given covariance estimator to data and return correlation
      and partial correlation.
 
@@ -146,7 +140,8 @@ def calculate_connectivity(X, cov_estimator):
         Time series data.
     cov_estimator : sklearn estimator
         Covariance estimator to fit to data.
-
+    trim_timeseries_to : int, optional
+        Length to trim time series to, by default None
     Returns
     -------
     tuple of numpy arrays
@@ -158,6 +153,11 @@ def calculate_connectivity(X, cov_estimator):
     # fix error ValueError: Buffer dtype mismatch, expected 'const double' but
     # got 'float'
     X = X.astype(np.double)
+
+    # trim the time series
+    if trim_timeseries_to is not None:
+        X = _trim_timeseries(time_series, trim_timeseries_to)
+
     cv = cov_estimator_.fit(X)
     cv_correlation = sym_matrix_to_vec(cv.covariance_, discard_diagonal=True)
     cv_partial = sym_matrix_to_vec(-cv.precision_, discard_diagonal=True)
@@ -165,7 +165,7 @@ def calculate_connectivity(X, cov_estimator):
     return (cv_correlation, cv_partial)
 
 
-def get_connectomes(cov, data, n_jobs):
+def get_connectomes(cov, data, n_jobs, trim_timeseries_to=None):
     """Wrapper function to calculate connectomes using different covariance
     estimators. Selects appropriate covariance estimator based on the
     given string and adds the connectomes to the given data dataframe."""
@@ -179,7 +179,9 @@ def get_connectomes(cov, data, n_jobs):
     time_series = data["time_series"].tolist()
     connectomes = []
     for ts in tqdm(time_series, desc=cov, leave=True):
-        connectome = calculate_connectivity(ts, cov_estimator)
+        connectome = calculate_connectivity(
+            ts, cov_estimator, trim_timeseries_to
+        )
         connectomes.append(connectome)
     correlation = np.asarray([connectome[0] for connectome in connectomes])
     partial_correlation = np.asarray(
