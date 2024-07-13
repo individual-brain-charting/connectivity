@@ -225,7 +225,7 @@ def get_confounds(
             os.path.join(
                 data_root_path,
                 "rpfiles",
-                f"rp_{subject}*{task}*.tsv",
+                f"rp_{subject}*{task}*.txt",
             )
         )[0]
     elif dataset == "thelittleprince":

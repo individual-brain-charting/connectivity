@@ -18,9 +18,11 @@ from utils.fc_estimation import (
 # kind of tasks to keep
 #  - "natural" for naturalistic tasks
 #  - "domain" for tasks from different domains
-tasktype = "natural"
+tasktype = "domain"
 # trim the time series to the given length, None to keep all
-trim_length = 293
+# keeping 293 time points for natural tasks
+# 128 for domain tasks
+trim_length = 128 if tasktype == "domain" else 293
 # cache and root output directory
 data_root = "/storage/store3/work/haggarwa/connectivity/data/"
 # results directory
@@ -123,34 +125,39 @@ def generator_dataset_task(dataset_task, tasktype):
             yield dataset, task, dataset_root_path
 
 
-#### CALCULATE CONNECTIVITY
+#### Extract Timeseries
 # get the atlas
-atlas = datasets.fetch_atlas_schaefer_2018(
-    data_dir=data_root, resolution_mm=1, n_rois=n_parcels
-)
-# use the atlas to extract time series for each task in parallel
-# get_time_series returns a dataframe with the time series for each task,
-# consisting of runs x subjects
-print("Time series extraction...")
-data = Parallel(n_jobs=n_jobs, verbose=0)(
-    delayed(get_time_series)(
-        task=task,
-        atlas=atlas,
-        data_root_path=dataset_root_path,
-        dataset=dataset,
-        trim_timeseries_to=trim_length,
+if os.path.exists(timeseries_path):
+    print("Time series already extracted.")
+    data = pd.read_pickle(timeseries_path)
+else:
+    atlas = datasets.fetch_atlas_schaefer_2018(
+        data_dir=data_root, resolution_mm=1, n_rois=n_parcels
     )
-    for dataset, task, dataset_root_path in generator_dataset_task(
-        dataset_task, tasktype
+    # use the atlas to extract time series for each task in parallel
+    # get_time_series returns a dataframe with the time series for each task,
+    # consisting of runs x subjects
+    print("Time series extraction...")
+    data = Parallel(n_jobs=n_jobs, verbose=0)(
+        delayed(get_time_series)(
+            task=task,
+            atlas=atlas,
+            data_root_path=dataset_root_path,
+            dataset=dataset,
+            trim_timeseries_to=trim_length,
+        )
+        for dataset, task, dataset_root_path in generator_dataset_task(
+            dataset_task, tasktype
+        )
     )
-)
-# concatenate all the dataframes so we have a single dataframe with the
-# time series from all tasks
-data = pd.concat(data)
-data.reset_index(inplace=True, drop=True)
-# save the data
-data.to_pickle(timeseries_path)
+    # concatenate all the dataframes so we have a single dataframe with the
+    # time series from all tasks
+    data = pd.concat(data)
+    data.reset_index(inplace=True, drop=True)
+    # save the data
+    data.to_pickle(timeseries_path)
 
+#### Calculate Connectivity
 # estimate the connectivity matrices for each cov estimator in parallel
 # get_connectomes returns a dataframe with two columns each corresponding
 # to the partial correlation and correlation connectome from each cov

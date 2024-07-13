@@ -154,6 +154,10 @@ def calculate_connectivity(X, cov_estimator):
     """
     # get the connectivity measure
     cov_estimator_ = clone(cov_estimator)
+
+    # fix error ValueError: Buffer dtype mismatch, expected 'const double' but
+    # got 'float'
+    X = X.astype(np.double)
     cv = cov_estimator_.fit(X)
     cv_correlation = sym_matrix_to_vec(cv.covariance_, discard_diagonal=True)
     cv_partial = sym_matrix_to_vec(-cv.precision_, discard_diagonal=True)
@@ -167,9 +171,7 @@ def get_connectomes(cov, data, n_jobs):
     given string and adds the connectomes to the given data dataframe."""
     # covariance estimator
     if cov == "Graphical-Lasso":
-        cov_estimator = GraphicalLassoCV(
-            verbose=11, n_jobs=n_jobs, assume_centered=True
-        )
+        cov_estimator = GraphicalLassoCV(n_jobs=n_jobs, assume_centered=True)
     elif cov == "Ledoit-Wolf":
         cov_estimator = LedoitWolf(assume_centered=True)
     elif cov == "Unregularized":
