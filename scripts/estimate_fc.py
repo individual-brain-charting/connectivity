@@ -18,7 +18,7 @@ from utils.fc_estimation import (
 # kind of tasks to keep
 #  - "natural" for naturalistic tasks
 #  - "domain" for tasks from different domains
-tasktype = "natural"
+tasktype = "domain"
 # trim the time series to the given length, None to keep all
 # keeping 293 time points for natural tasks
 # 128 for domain tasks

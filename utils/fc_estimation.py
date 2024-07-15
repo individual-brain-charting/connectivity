@@ -108,7 +108,14 @@ def get_time_series(task, atlas, data_root_path, dataset="ibc"):
                         dataset,
                     )
                     confounds = np.loadtxt(confounds)
-                    compcor_confounds = high_variance_confounds(run)
+                    # some HCP subjects throw EOFError
+                    try:
+                        compcor_confounds = high_variance_confounds(run)
+                    except EOFError as e:
+                        print(e, run)
+                        with open("log_EOFError.txt", "w") as f:
+                            f.write(f"{run}\n")
+                        continue
                     # archi, ArchiSpatial, sub-01 confounds had an extra row
                     try:
                         confounds = np.hstack((confounds, compcor_confounds))
@@ -116,14 +123,7 @@ def get_time_series(task, atlas, data_root_path, dataset="ibc"):
                         with open("log_ValueError.txt", "w") as f:
                             f.write(f"{e}\n")
                             f.write(f"{run}\n")
-                # some HCP subjects throw EOFError
-                try:
-                    time_series = masker.transform(run, confounds=confounds)
-                except EOFError as e:
-                    print(e, run)
-                    with open("log_EOFError.txt", "w") as f:
-                        f.write(f"{run}\n")
-                    continue
+                time_series = masker.transform(run, confounds=confounds)
                 all_time_series.append(time_series)
                 subject_ids.append(subject)
                 run_labels_.append(run_label)
@@ -136,7 +136,9 @@ def get_time_series(task, atlas, data_root_path, dataset="ibc"):
     return pd.DataFrame(data)
 
 
-def calculate_connectivity(X, cov_estimator, trim_timeseries_to=None):
+def calculate_connectivity(
+    X, cov_estimator, data, ind, trim_timeseries_to=None
+):
     """Fit given covariance estimator to data and return correlation
      and partial correlation.
 
@@ -162,11 +164,23 @@ def calculate_connectivity(X, cov_estimator, trim_timeseries_to=None):
 
     # trim the time series
     if trim_timeseries_to is not None:
-        X = _trim_timeseries(time_series, trim_timeseries_to)
+        X = _trim_timeseries(X, trim_timeseries_to)
 
-    cv = cov_estimator_.fit(X)
-    cv_correlation = sym_matrix_to_vec(cv.covariance_, discard_diagonal=True)
-    cv_partial = sym_matrix_to_vec(-cv.precision_, discard_diagonal=True)
+    # GraphicalLassoCV throws Non SPD results error, needs longer time series
+    try:
+        cv = cov_estimator_.fit(X)
+        cv_correlation = sym_matrix_to_vec(
+            cv.covariance_, discard_diagonal=True
+        )
+        cv_partial = sym_matrix_to_vec(-cv.precision_, discard_diagonal=True)
+    except FloatingPointError as e:
+        print(e)
+        cv_correlation = np.nan
+        cv_partial = np.nan
+        with open("log_NonSPD.txt", "w") as f:
+            f.write(f"{data.loc["subject_ids", ind]}\t")
+            f.write(f"{data.loc["run_labels", ind]}\t")
+            f.write(f"{data.loc["tasks", ind]}\n")
 
     return (cv_correlation, cv_partial)
 
@@ -184,11 +198,13 @@ def get_connectomes(cov, data, n_jobs, trim_timeseries_to=None):
         cov_estimator = EmpiricalCovariance(assume_centered=True)
     time_series = data["time_series"].tolist()
     connectomes = []
+    count = 0
     for ts in tqdm(time_series, desc=cov, leave=True):
         connectome = calculate_connectivity(
-            ts, cov_estimator, trim_timeseries_to
+            ts, cov_estimator, data, count, trim_timeseries_to
         )
         connectomes.append(connectome)
+        count += 1
     correlation = np.asarray([connectome[0] for connectome in connectomes])
     partial_correlation = np.asarray(
         [connectome[1] for connectome in connectomes]
