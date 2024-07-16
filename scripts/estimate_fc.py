@@ -167,7 +167,9 @@ else:
 # estimator
 print("Connectivity estimation...")
 data = Parallel(n_jobs=20, verbose=0)(
-    delayed(get_connectomes)(cov, data, n_jobs, trim_timeseries_to=trim_length)
+    delayed(get_connectomes)(
+        cov, data, n_jobs, n_parcels, tasktype, trim_timeseries_to=trim_length
+    )
     for cov in cov_estimators
 )
 # concatenate the dataframes so we have a single dataframe with the

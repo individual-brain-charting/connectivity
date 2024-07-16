@@ -137,7 +137,7 @@ def get_time_series(task, atlas, data_root_path, dataset="ibc"):
 
 
 def calculate_connectivity(
-    X, cov_estimator, data, ind, trim_timeseries_to=None
+    X, cov_estimator, data, ind, n_parcels, tasktype, trim_timeseries_to=None
 ):
     """Fit given covariance estimator to data and return correlation
      and partial correlation.
@@ -175,9 +175,11 @@ def calculate_connectivity(
         cv_partial = sym_matrix_to_vec(-cv.precision_, discard_diagonal=True)
     except FloatingPointError as e:
         print(e)
-        cv_correlation = np.nan
-        cv_partial = np.nan
+        cv_correlation = np.nan * np.ones(n_parcels * (n_parcels - 1) // 2)
+        cv_partial = np.nan * np.ones(n_parcels * (n_parcels - 1) // 2)
         with open("log_NonSPD.txt", "a+") as f:
+            f.write(f"{tasktype},")
+            f.write(f"{trim_timeseries_to},")
             f.write(f"{data.iloc[ind]["subject_ids"]},")
             f.write(f"{data.iloc[ind]["run_labels"]},")
             f.write(f"{data.iloc[ind]["tasks"]}\n")
@@ -185,7 +187,9 @@ def calculate_connectivity(
     return (cv_correlation, cv_partial)
 
 
-def get_connectomes(cov, data, n_jobs, trim_timeseries_to=None):
+def get_connectomes(
+    cov, data, n_jobs, n_parcels, tasktype, trim_timeseries_to=None
+):
     """Wrapper function to calculate connectomes using different covariance
     estimators. Selects appropriate covariance estimator based on the
     given string and adds the connectomes to the given data dataframe."""
@@ -201,7 +205,13 @@ def get_connectomes(cov, data, n_jobs, trim_timeseries_to=None):
     count = 0
     for ts in tqdm(time_series, desc=cov, leave=True):
         connectome = calculate_connectivity(
-            ts, cov_estimator, data, count, trim_timeseries_to
+            ts,
+            cov_estimator,
+            data,
+            count,
+            n_parcels,
+            tasktype,
+            trim_timeseries_to,
         )
         connectomes.append(connectome)
         count += 1
