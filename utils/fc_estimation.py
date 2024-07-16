@@ -113,14 +113,14 @@ def get_time_series(task, atlas, data_root_path, dataset="ibc"):
                         compcor_confounds = high_variance_confounds(run)
                     except EOFError as e:
                         print(e, run)
-                        with open("log_EOFError.txt", "w") as f:
+                        with open("log_EOFError.txt", "a+") as f:
                             f.write(f"{run}\n")
                         continue
                     # archi, ArchiSpatial, sub-01 confounds had an extra row
                     try:
                         confounds = np.hstack((confounds, compcor_confounds))
                     except ValueError as e:
-                        with open("log_ValueError.txt", "w") as f:
+                        with open("log_ValueError.txt", "a+") as f:
                             f.write(f"{e}\n")
                             f.write(f"{run}\n")
                 time_series = masker.transform(run, confounds=confounds)
@@ -177,10 +177,10 @@ def calculate_connectivity(
         print(e)
         cv_correlation = np.nan
         cv_partial = np.nan
-        with open("log_NonSPD.txt", "w") as f:
-            f.write(f"{data.loc["subject_ids", ind]}\t")
-            f.write(f"{data.loc["run_labels", ind]}\t")
-            f.write(f"{data.loc["tasks", ind]}\n")
+        with open("log_NonSPD.txt", "a+") as f:
+            f.write(f"{data.iloc[ind]["subject_ids"]},")
+            f.write(f"{data.iloc[ind]["run_labels"]},")
+            f.write(f"{data.iloc[ind]["tasks"]}\n")
 
     return (cv_correlation, cv_partial)
 
