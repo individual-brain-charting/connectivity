@@ -17,8 +17,8 @@ from utils.fc_estimation import (
 #### INPUTS
 # kind of tasks to keep
 #  - "natural" for naturalistic tasks
-#  - "domain" for tasks from different domains
-tasktype = "domain"
+#  - "domain" for cognitive-domain-specific tasks
+tasktype = "natural"
 # trim the time series to the given length, None to keep all
 # keeping 293 time points for natural tasks
 # 128 for domain tasks
@@ -35,7 +35,7 @@ os.makedirs(results, exist_ok=True)
 # number of jobs to run in parallel
 n_jobs = 10
 # number of parcels: 400 or 200
-n_parcels = 200
+n_parcels = 400
 # cov estimators
 cov_estimators = ["Graphical-Lasso", "Ledoit-Wolf", "Unregularized"]
 # datasets and tasks to extract time series from
