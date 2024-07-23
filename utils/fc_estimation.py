@@ -17,6 +17,7 @@ from sklearn.covariance import (
 from tqdm import tqdm
 import itertools
 from .fetching import get_ses_modality, get_niftis, get_confounds, get_tr
+from scipy.linalg import LinAlgError
 
 
 def _update_data(data, all_time_series, subject_ids, run_labels, tasks):
@@ -108,7 +109,7 @@ def get_time_series(task, atlas, data_root_path, dataset="ibc"):
                         dataset,
                     )
                     confounds = np.loadtxt(confounds)
-                    # some HCP subjects throw EOFError
+                    # some HCP subjects throw EOFError, skip them
                     try:
                         compcor_confounds = high_variance_confounds(run)
                     except EOFError as e:
@@ -173,12 +174,17 @@ def calculate_connectivity(
             cv.covariance_, discard_diagonal=True
         )
         cv_partial = sym_matrix_to_vec(-cv.precision_, discard_diagonal=True)
-    except FloatingPointError as e:
+    except (FloatingPointError, LinAlgError) as e:
         print(e)
         cv_correlation = np.nan * np.ones(n_parcels * (n_parcels - 1) // 2)
         cv_partial = np.nan * np.ones(n_parcels * (n_parcels - 1) // 2)
-        with open("log_NonSPD.txt", "a+") as f:
+        if e == FloatingPointError:
+            log_file_name = "log_NonSPD.txt"
+        elif e == LinAlgError:
+            log_file_name = "log_LinAlgError.txt"
+        with open(log_file_name, "a+") as f:
             f.write(f"{tasktype},")
+            f.write(f"{n_parcels},")
             f.write(f"{trim_timeseries_to},")
             f.write(f"{data.iloc[ind]["subject_ids"]},")
             f.write(f"{data.iloc[ind]["run_labels"]},")
