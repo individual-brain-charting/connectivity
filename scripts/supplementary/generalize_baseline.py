@@ -28,23 +28,30 @@ for do_hist_equ in [False, True]:
     external_connectomes = pd.read_pickle(
         os.path.join(
             DATA_ROOT,
-            "external_connectivity_full_length",
-            "connectomes_200.pkl",
-        )
-    )
-    # load connectomes for IBC GBU
-    connectomes = pd.read_pickle(
-        os.path.join(
-            DATA_ROOT,
-            "ibc_sync_external_connectivity_full_length",
-            "connectomes_200.pkl",
+            "external_connectivity_20240125-104121",
+            "connectomes_200_compcorr.pkl",
         )
     )
 
+    # load connectomes for IBC GBU
+    IBC_connectomes = pd.read_pickle(
+        os.path.join(
+            DATA_ROOT,
+            "connectomes_200_comprcorr",
+        )
+    )
+
+    IBC_connectomes = IBC_connectomes[
+        IBC_connectomes["tasks"] == "GoodBadUgly"
+    ]
+    IBC_connectomes = IBC_connectomes[
+        IBC_connectomes["run_labels"].isin(["run-03", "run-04", "run-05"])
+    ]
+    IBC_connectomes.reset_index(inplace=True, drop=True)
     # rename run labels to match across datasets
-    connectomes["run_labels"].replace("run-03", "1", inplace=True)
-    connectomes["run_labels"].replace("run-04", "2", inplace=True)
-    connectomes["run_labels"].replace("run-05", "3", inplace=True)
+    IBC_connectomes["run_labels"].replace("run-03", "1", inplace=True)
+    IBC_connectomes["run_labels"].replace("run-04", "2", inplace=True)
+    IBC_connectomes["run_labels"].replace("run-05", "3", inplace=True)
 
     external_connectomes["run_labels"].replace("run-01", "1", inplace=True)
     external_connectomes["run_labels"].replace("run-02", "2", inplace=True)
@@ -131,11 +138,11 @@ for do_hist_equ in [False, True]:
         for cov in cov_estimators:
             for measure in measures:
                 # train
-                classes = connectomes["run_labels"].to_numpy(dtype=object)
-                groups = connectomes["subject_ids"].to_numpy(dtype=object)
+                classes = IBC_connectomes["run_labels"].to_numpy(dtype=object)
+                groups = IBC_connectomes["subject_ids"].to_numpy(dtype=object)
                 unique_groups = np.unique(groups)
                 data = np.array(
-                    connectomes[f"{cov} {measure}"].values.tolist()
+                    IBC_connectomes[f"{cov} {measure}"].values.tolist()
                 )
                 classifier = LinearSVC(max_iter=1000000, dual="auto")
                 dummy = DummyClassifier(strategy="most_frequent")
