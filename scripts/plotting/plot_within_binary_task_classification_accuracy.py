@@ -4,7 +4,7 @@ import seaborn as sns
 import matplotlib.pyplot as plt
 
 # add utils to path
-sys.path.append(os.path.join(os.path.dirname(__file__), ".."))
+# sys.path.append(os.path.join(os.path.dirname(__file__), ".."))
 from utils.plot import wrap_labels
 
 sns.set_theme()
@@ -14,23 +14,19 @@ sns.set_context("talk")
 ### within or binary task classification accuracies ###
 hatches = [None, "X", "\\", "/", "|"] * 8
 
-cache = DATA_ROOT = "/storage/store/work/haggarwa/"
-DATA_ROOT2 = "/storage/store2/work/haggarwa/"
-n_parcels = 400
-
+results_root = "/storage/store3/work/haggarwa/connectivity/results"
+plots_root = "/storage/store3/work/haggarwa/connectivity/plots"
+n_parcels = 200
+trim_length = 293
+tasktype = "natural"
+classification = "within"
 do_hatch = False
 
-if n_parcels == 400:
-    # with compcorr and fixed resting state confounds
-    results_dir = "fc_withintask_classification_400_20240120-154926"
-    results_pkl = os.path.join(DATA_ROOT2, results_dir, "all_results.pkl")
-    output_dir = "within_task_classification_plots_compcorr"
-elif n_parcels == 200:
-    # with compcorr and fixed resting state confounds
-    results_dir = "fc_withintask_classification_200_20240118-143124"
-    results_pkl = os.path.join(DATA_ROOT2, results_dir, "all_results.pkl")
-    output_dir = "within_task_classification_plots_200_compcorr"
-output_dir = os.path.join(DATA_ROOT2, output_dir)
+dir_name = f"classification-{classification}_tasktype-{tasktype}_nparcels-{n_parcels}_trim-{trim_length}"
+results_pkl = os.path.join(results_root, dir_name, "all_results.pkl")
+
+output_dir = os.path.join(plots_root, dir_name)
+
 os.makedirs(output_dir, exist_ok=True)
 df = pd.read_pickle(results_pkl)
 # cov estimators
