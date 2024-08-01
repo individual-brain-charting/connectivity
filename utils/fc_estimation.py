@@ -176,12 +176,13 @@ def calculate_connectivity(
         cv_partial = sym_matrix_to_vec(-cv.precision_, discard_diagonal=True)
     except (FloatingPointError, LinAlgError) as e:
         print(e)
+        match e:
+            case FloatingPointError():
+                log_file_name = "log_NonSPD.txt"
+            case LinAlgError():
+                log_file_name = "log_LinAlgError.txt"
         cv_correlation = np.nan * np.ones(n_parcels * (n_parcels - 1) // 2)
         cv_partial = np.nan * np.ones(n_parcels * (n_parcels - 1) // 2)
-        if e == FloatingPointError:
-            log_file_name = "log_NonSPD.txt"
-        elif e == LinAlgError:
-            log_file_name = "log_LinAlgError.txt"
         with open(log_file_name, "a+") as f:
             f.write(f"{tasktype},")
             f.write(f"{n_parcels},")
