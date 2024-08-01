@@ -18,14 +18,14 @@ from utils.fc_estimation import (
 # kind of tasks to keep
 #  - "natural" for naturalistic tasks
 #  - "domain" for cognitive-domain-specific tasks
-tasktype = "natural"
+tasktype = "domain"
 # trim the time series to the given length, None to keep all
 # keeping 293 time points for natural tasks
 # 128 for domain tasks
-# trim_length = 128 if tasktype == "domain" else 293
+trim_length = 128 if tasktype == "domain" else 293
 
 # also try no trimming
-trim_length = None
+# trim_length = None
 
 # cache and root output directory
 data_root = "/storage/store3/work/haggarwa/connectivity/data/"
