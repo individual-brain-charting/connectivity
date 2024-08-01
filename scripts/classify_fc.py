@@ -9,26 +9,27 @@ from nilearn import datasets
 from joblib import Parallel, delayed
 
 # add utils to path
-sys.path.append(os.path.join(os.path.dirname(__file__), ".."))
-from utils.fc_estimation import (
-    get_connectomes,
-    get_time_series,
-)
+# sys.path.append(os.path.join(os.path.dirname(__file__), ".."))
 from utils.fc_classification import do_cross_validation
-
-sns.set_theme(context="talk", style="whitegrid")
 
 #### INPUTS
 # number of jobs to run in parallel
-n_jobs = 1
+n_jobs = 10
 # number of parcels
-n_parcels = 400  # or 400
+n_parcels = 200  # or 400
 # number of splits for cross validation
 n_splits = 50
 # do within each task or across all tasks
 within_task = True
 # we will use the resting state and all the movie-watching sessions
-tasks = ["RestingState", "Raiders", "GoodBadUgly", "MonkeyKingdom", "Mario"]
+tasks = [
+    "RestingState",
+    "Raiders",
+    "GoodBadUgly",
+    "MonkeyKingdom",
+    "Mario",
+    "LePetitPrince",
+]
 # cov estimators
 cov_estimators = ["Graphical-Lasso", "Ledoit-Wolf", "Unregularized"]
 # connectivity measures for each cov estimator
@@ -44,7 +45,11 @@ for cov in cov_estimators:
         connectivity_measures.append(cov + " " + measure)
 
 # cache and root output directory
-cache = DATA_ROOT = "/storage/store/work/haggarwa/"
+data_root = "/storage/store3/work/haggarwa/connectivity/data/"
+# results directory
+results = "/storage/store3/work/haggarwa/connectivity/results"
+os.makedirs(results, exist_ok=True)
+
 if within_task:
     output_dir = (
         f"fc_withintask_classification_{n_parcels}"
@@ -55,16 +60,14 @@ else:
         f"fc_acrosstask_classification_{n_parcels}_"
         f"{time.strftime('%Y%m%d-%H%M%S')}"
     )
-output_dir = os.path.join(DATA_ROOT, output_dir)
+output_dir = os.path.join(results, output_dir)
 os.makedirs(output_dir, exist_ok=True)
 
 # connectivity data path
-if n_parcels == 400:
-    # with compcorr
-    fc_data_path = os.path.join(cache, "connectomes_400_comprcorr")
-elif n_parcels == 200:
-    # with compcorr
-    fc_data_path = os.path.join(cache, "connectomes_200_comprcorr")
+fc_data_path = os.path.join(
+    results,
+    f"connectomes_nparcels-{n_parcels}_tasktype-natural_trim-293.pkl",
+)
 
 
 # generator to get all the combinations of classification
@@ -83,10 +86,15 @@ def all_combinations(classify, tasks, connectivity_measures, within_task):
                 ["RestingState", "Raiders"],
                 ["RestingState", "GoodBadUgly"],
                 ["RestingState", "MonkeyKingdom"],
+                ["RestingState", "LePetitPrince"],
                 ["RestingState", "Mario"],
                 ["Raiders", "GoodBadUgly"],
                 ["Raiders", "MonkeyKingdom"],
                 ["GoodBadUgly", "MonkeyKingdom"],
+                ["LePetitPrince", "Raiders"],
+                ["LePetitPrince", "GoodBadUgly"],
+                ["LePetitPrince", "MonkeyKingdom"],
+                ["LePetitPrince", "Mario"],
                 ["Raiders", "Mario"],
                 ["GoodBadUgly", "Mario"],
                 ["MonkeyKingdom", "Mario"],
@@ -96,7 +104,14 @@ def all_combinations(classify, tasks, connectivity_measures, within_task):
     else:
         tasks_ = {
             # only classify runs across movie-watching tasks
-            "Runs": [["Raiders", "GoodBadUgly", "MonkeyKingdom"]],
+            "Runs": [
+                [
+                    "Raiders",
+                    "GoodBadUgly",
+                    "MonkeyKingdom",
+                    "LePetitPrince",
+                ]
+            ],
             "Subjects": [tasks],
             "Tasks": [tasks],
         }
@@ -118,7 +133,7 @@ if within_task:
     print("Starting within task cross validation......")
 else:
     print("Starting across task cross validation......")
-all_results = Parallel(n_jobs=10, verbose=11, backend="loky")(
+all_results = Parallel(n_jobs=n_jobs, verbose=11, backend="loky")(
     delayed(do_cross_validation)(
         classes, task, n_splits, connectivity_measure, data, output_dir
     )
