@@ -13,8 +13,9 @@ from sklearn.model_selection import (
 from matplotlib import pyplot as plt
 import seaborn as sns
 
-cache = DATA_ROOT = "/storage/store2/work/haggarwa/"
-output_dir = os.path.join(DATA_ROOT, "transfer_classifier")
+DATA_ROOT = "/storage/store3/work/haggarwa/connectivity/results/before_review"
+out_root = "/storage/store3/work/haggarwa/connectivity/plots"
+output_dir = os.path.join(out_root, "transfer_classifier")
 os.makedirs(output_dir, exist_ok=True)
 
 # cov estimators
