@@ -16,11 +16,13 @@ from utils.fc_classification import do_cross_validation
 # number of jobs to run in parallel
 n_jobs = 10
 # number of parcels
-n_parcels = 200  # or 400
+n_parcels = 400  # or 400
 # number of splits for cross validation
 n_splits = 50
 # do within each task or across all tasks
 within_task = True
+# trim to use
+trim = None
 # we will use the resting state and all the movie-watching sessions
 tasks = [
     "RestingState",
@@ -66,7 +68,7 @@ os.makedirs(output_dir, exist_ok=True)
 # connectivity data path
 fc_data_path = os.path.join(
     results,
-    f"connectomes_nparcels-{n_parcels}_tasktype-natural_trim-293.pkl",
+    f"connectomes_nparcels-{n_parcels}_tasktype-natural_trim-{trim}.pkl",
 )
 
 
@@ -123,6 +125,7 @@ def all_combinations(classify, tasks, connectivity_measures, within_task):
 
 #### LOAD CONNECTIVITY
 data = pd.read_pickle(fc_data_path)
+data = data[data["dataset"] == "ibc"]
 
 #### RUN CLASSIFICATION
 # run classification for all combinations of classification, task and

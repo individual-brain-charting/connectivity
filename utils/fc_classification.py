@@ -9,10 +9,27 @@ from sklearn.metrics import (
     roc_auc_score,
     balanced_accuracy_score,
 )
-from sklearn.model_selection import GroupShuffleSplit, LeavePGroupsOut
+from sklearn.model_selection import (
+    GroupShuffleSplit,
+    LeavePGroupsOut,
+    StratifiedGroupKFold,
+)
 from sklearn.svm import LinearSVC
 from sklearn.dummy import DummyClassifier
 from tqdm import tqdm
+
+
+def drop_nan_samples(X, y, groups, task_label, connectivity_measure, classify):
+    nan_indices = np.where(np.isnan(X).all(axis=1))
+    if len(nan_indices[0]) > 0:
+        print(
+            f"{classify}, {task_label}, {connectivity_measure}:\n Dropping {len(nan_indices[0])} samples with NaNs"
+        )
+    X = np.delete(X, nan_indices, axis=0)
+    y = np.delete(y, nan_indices, axis=0)
+    groups = np.delete(groups, nan_indices, axis=0)
+
+    return X, y, groups
 
 
 def _update_results(
@@ -163,28 +180,31 @@ def classify_connectivity(
         f"\n{classify}, {connectivity_measure}, {task_label}: {accuracy:.2f} / {dummy_accuracy:.2f} ||| {balanced_accuracy:.2f} / {dummy_balanced_accuracy:.2f}"
     )
 
-    if pooled_tasks:
-        auc = 0
-        dummy_auc = 0
-    else:
-        if classify in ["Runs", "Subjects"]:
-            auc = 0
-            dummy_auc = 0
-        else:
-            average = None
-            multi_class = "raise"
-            auc = roc_auc_score(
-                classes[test],
-                classifier.decision_function(connectomes[test]),
-                average=average,
-                multi_class=multi_class,
-            )
-            dummy_auc = roc_auc_score(
-                classes[test],
-                dummy.predict_proba(connectomes[test])[:, 1],
-                average=average,
-                multi_class=multi_class,
-            )
+    # if pooled_tasks:
+    #     auc = 0
+    #     dummy_auc = 0
+    # else:
+    #     if classify in ["Runs", "Subjects"]:
+    #         auc = 0
+    #         dummy_auc = 0
+    #     else:
+    #         average = None
+    #         multi_class = "raise"
+    #         auc = roc_auc_score(
+    #             classes[test],
+    #             classifier.decision_function(connectomes[test]),
+    #             average=average,
+    #             multi_class=multi_class,
+    #         )
+    #         dummy_auc = roc_auc_score(
+    #             classes[test],
+    #             dummy.predict_proba(connectomes[test])[:, 1],
+    #             average=average,
+    #             multi_class=multi_class,
+    #         )
+
+    auc = 0
+    dummy_auc = 0
 
     # store the scores for this cross-validation fold
     results = _update_results(
@@ -298,31 +318,26 @@ def do_cross_validation(
     else:
         pooled_tasks = False
 
-    if pooled_tasks:
-        if classify == "Subjects":
-            cv_test_size = 0.25
-            cv = GroupShuffleSplit(
-                n_splits=cv_splits, random_state=0, test_size=cv_test_size
-            )
-            cv_scheme = "GroupShuffleSplit"
-        elif classify in ["Tasks", "Runs"]:
-            cv = LeavePGroupsOut(5)
-            cv_scheme = "LeavePGroupsOut"
-    else:
-        if classify in ["Runs", "Subjects"]:
-            cv_test_size = 0.25
-            cv = GroupShuffleSplit(
-                n_splits=cv_splits, random_state=0, test_size=cv_test_size
-            )
-            cv_scheme = "GroupShuffleSplit"
-        elif classify == "Tasks":
-            cv = LeavePGroupsOut(5)
-            cv_scheme = "LeavePGroupsOut"
-
-    results_dir = os.path.join(
-        root, f"{classify}_{cov}_{cv_scheme}_{cv_splits}"
-    )
-    os.makedirs(results_dir, exist_ok=True)
+    # if pooled_tasks:
+    #     if classify == "Subjects":
+    #         cv_test_size = 0.25
+    #         cv = GroupShuffleSplit(
+    #             n_splits=cv_splits, random_state=0, test_size=cv_test_size
+    #         )
+    #         cv_scheme = "GroupShuffleSplit"
+    #     elif classify in ["Tasks", "Runs"]:
+    #         cv = LeavePGroupsOut(5)
+    #         cv_scheme = "LeavePGroupsOut"
+    # else:
+    #     if classify in ["Runs", "Subjects"]:
+    #         cv_test_size = 0.25
+    #         cv = GroupShuffleSplit(
+    #             n_splits=cv_splits, random_state=0, test_size=cv_test_size
+    #         )
+    #         cv_scheme = "GroupShuffleSplit"
+    #     elif classify == "Tasks":
+    #         cv = LeavePGroupsOut(5)
+    #         cv_scheme = "LeavePGroupsOut"
 
     # select data based current task and whatever is being classified
     # get classes and groups
@@ -331,19 +346,38 @@ def do_cross_validation(
     )
     # pick specific connectome to classify based on Sconnectivity measure
     connectomes = np.array(data[connectivity_measure].values.tolist())
+    # drop samples with NaNs
+    connectomes, classes, groups = drop_nan_samples(
+        connectomes,
+        classes,
+        groups,
+        task_label,
+        connectivity_measure,
+        classify,
+    )
+    n_groups = cv_splits = len(np.unique(groups))
+    # set-up cross-validation scheme
+    cv = StratifiedGroupKFold(n_splits=n_groups, random_state=0, shuffle=True)
+    cv_scheme = "StratifiedGroupKFold"
+    # set-up output directory
+    results_dir = os.path.join(
+        root, f"{classify}_{cov}_{cv_scheme}_{cv_splits}"
+    )
+    os.makedirs(results_dir, exist_ok=True)
+
     # get train and test splits
     splits = [split for split in cv.split(connectomes, classes, groups)]
     # too many splits for Tasks from LPGO scheme, so randomly select some
-    if pooled_tasks:
-        if classify in ["Tasks", "Runs"]:
-            rng = np.random.default_rng(1)
-            select_splits = rng.choice(len(splits), cv_splits, replace=False)
-            splits = [splits[i] for i in select_splits]
-    else:
-        if classify == "Tasks":
-            rng = np.random.default_rng(1)
-            select_splits = rng.choice(len(splits), cv_splits, replace=False)
-            splits = [splits[i] for i in select_splits]
+    # if pooled_tasks:
+    #     if classify in ["Tasks", "Runs"]:
+    #         rng = np.random.default_rng(1)
+    #         select_splits = rng.choice(len(splits), cv_splits, replace=False)
+    #         splits = [splits[i] for i in select_splits]
+    # else:
+    #     if classify == "Tasks":
+    #         rng = np.random.default_rng(1)
+    #         select_splits = rng.choice(len(splits), cv_splits, replace=False)
+    #         splits = [splits[i] for i in select_splits]
     # plot the train/test cross-validation splits
     _plot_cv_indices(
         splits,
