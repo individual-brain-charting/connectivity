@@ -17,37 +17,56 @@ os.makedirs(output, exist_ok=True)
 
 data_files = glob(os.path.join(results, "*.csv"))
 for data_file in data_files:
-    data = pd.read_csv(data_file)
-    datasets = data["direction"].str.split(" -> ", expand=True)[0].unique()
-    order = [
-        "Unregularized correlation",
-        "Ledoit-Wolf correlation",
-        "Graphical-Lasso partial correlation",
-    ]
-    ax_score = sns.barplot(
-        y="cov measure",
-        x="balanced_accuracy",
-        hue="direction",
-        data=data,
-        orient="h",
-        palette="tab10",
-        order=order,
-    )
-    wrap_labels(ax_score, 20)
-    ax_dummy = sns.barplot(
-        y="cov measure",
-        x="dummy_balanced_accuracy",
-        hue="direction",
-        data=data,
-        orient="h",
-        palette="pastel",
-        order=order,
-    )
-    plt.xlabel("Balanced Accuracy")
-    plt.ylabel("FC measure")
-    plt.title(f"Generalization across datasets: {datasets[0]}, {datasets[1]}")
-    plt.legend(framealpha=0, loc="center left", bbox_to_anchor=(1, 0.5))
-    plot_file = data_file.split("/")[-1].split(".")[0]
-    plt.savefig(os.path.join(output, f"{plot_file}.png"), bbox_inches="tight")
-    plt.savefig(os.path.join(output, f"{plot_file}.svg"), bbox_inches="tight")
-    plt.close()
+    # split path to get file name
+    filename = data_file.split("/")[-1]
+    # split file name to get dataset names
+    dataset = filename.split("_")[-2].split("-")[1]
+    for score in ["balanced_accuracy", "f1"]:
+        data = pd.read_csv(
+            data_file,
+        )
+        data[data.select_dtypes(include=["number"]).columns] *= 100
+        datasets = data["direction"].str.split(" -> ", expand=True)[0].unique()
+        order = [
+            "Unregularized correlation",
+            "Ledoit-Wolf correlation",
+            "Graphical-Lasso partial correlation",
+        ]
+        ax_score = sns.barplot(
+            y="cov measure",
+            x=score,
+            hue="direction",
+            data=data,
+            orient="h",
+            palette="Dark2",
+            order=order,
+        )
+        wrap_labels(ax_score, 20)
+        ax_dummy = sns.barplot(
+            y="cov measure",
+            x=f"dummy_{score}",
+            hue="direction",
+            data=data,
+            orient="h",
+            palette="Pastel2",
+            order=order,
+        )
+        if score == "balanced_accuracy":
+            plt.xlabel("Accuracy")
+        else:
+            plt.xlabel("F1 score")
+        plt.ylabel("FC measure")
+        plt.title(
+            f"Generalization across datasets: {datasets[0]}, {datasets[1]}"
+        )
+        plt.legend(framealpha=0, loc="center left", bbox_to_anchor=(1, 0.5))
+        plot_file = data_file.split("/")[-1].split(".")[0]
+        plt.savefig(
+            os.path.join(output, f"{plot_file}_{score}.png"),
+            bbox_inches="tight",
+        )
+        plt.savefig(
+            os.path.join(output, f"{plot_file}_{score}.svg"),
+            bbox_inches="tight",
+        )
+        plt.close()

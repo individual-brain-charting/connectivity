@@ -11,9 +11,8 @@ import numpy as np
 from scipy.stats import mannwhitneyu
 
 # add utils to path
-sys.path.append(os.path.join(os.path.dirname(__file__), ".."))
+# sys.path.append(os.path.join(os.path.dirname(__file__), ".."))
 from utils.plot import (
-    fit_classifier,
     get_clas_cov_measure,
     plot_full_weight_matrix,
     plot_network_weight_matrix,
@@ -25,42 +24,30 @@ sns.set_theme()
 sns.set_style("whitegrid")
 sns.set_context("talk")
 
-### fit classifiers to get weights
-DATA_ROOT = cache = "/storage/store2/work/haggarwa/"
+results_root = (
+    "/storage/store3/work/haggarwa/connectivity/results/wo_extra_GBU_runs"
+)
+plots_root = (
+    "/storage/store3/work/haggarwa/connectivity/plots/wo_extra_GBU_runs"
+)
 n_parcels = 400
-if n_parcels == 400:
-    func_data_path = os.path.join(cache, "connectomes_400_comprcorr")
-    output_dir = os.path.join(DATA_ROOT, "weights_compcorr")
-elif n_parcels == 200:
-    func_data_path = os.path.join(cache, "connectomes_200_comprcorr")
-    output_dir = os.path.join(DATA_ROOT, "weights_200_compcorr")
+trim_length = None
+
+dir_name = f"weights_nparcels-{n_parcels}_trim-{trim_length}"
+weight_dir = os.path.join(results_root, dir_name)
+
+output_dir = os.path.join(plots_root, dir_name)
 os.makedirs(output_dir, exist_ok=True)
-func_data = pd.read_pickle(func_data_path)
+
 cov_estimators = ["Graphical-Lasso", "Ledoit-Wolf", "Unregularized"]
 measures = ["correlation", "partial correlation"]
 classify = ["Tasks", "Subjects", "Runs"]
-x = Parallel(n_jobs=20, verbose=11)(
-    delayed(fit_classifier)(
-        clas, cov, measure, func_data, output_dir=output_dir
-    )
-    for clas, cov, measure in get_clas_cov_measure(
-        classify, cov_estimators, measures
-    )
-)
 
-### network pair SVC weight matrices
-DATA_ROOT = cache = "/storage/store2/work/haggarwa/"
-n_parcels = 400
-if n_parcels == 400:
-    weight_dir = os.path.join(DATA_ROOT, "weights_compcorr")
-    output_dir = os.path.join(DATA_ROOT, "weight_plots_compcorr")
-elif n_parcels == 200:
-    weight_dir = os.path.join(DATA_ROOT, "weights_200_compcorr")
-    output_dir = os.path.join(DATA_ROOT, "weight_plots_200_compcorr")
-os.makedirs(output_dir, exist_ok=True)
 # get atlas for yeo network labels
 atlas = datasets.fetch_atlas_schaefer_2018(
-    data_dir=cache, resolution_mm=2, n_rois=n_parcels
+    data_dir="/storage/store3/work/haggarwa/connectivity",
+    resolution_mm=2,
+    n_rois=n_parcels,
 )
 # cov estimators
 cov_estimators = ["Graphical-Lasso", "Ledoit-Wolf", "Unregularized"]
@@ -104,25 +91,7 @@ x = Parallel(n_jobs=20, verbose=11)(
 )
 
 ### compare within network and between network weights
-DATA_ROOT = cache = "/storage/store2/work/haggarwa/"
-n_parcels = 400
-if n_parcels == 400:
-    weight_dir = os.path.join(DATA_ROOT, "weights_compcorr")
-elif n_parcels == 200:
-    weight_dir = os.path.join(DATA_ROOT, "weights_200_compcorr")
-# get atlas for yeo network labels
-atlas = datasets.fetch_atlas_schaefer_2018(
-    data_dir=cache, resolution_mm=2, n_rois=n_parcels
-)
-# cov estimators
-cov_estimators = ["Graphical-Lasso", "Ledoit-Wolf", "Unregularized"]
-# connectivity measures for each cov estimator
-measures = ["correlation", "partial correlation"]
-# what to classify
-classify = ["Tasks", "Subjects", "Runs"]
-
 labels = get_network_labels(atlas)[1]
-
 
 le = preprocessing.LabelEncoder()
 encoded_labels = le.fit_transform(labels)
