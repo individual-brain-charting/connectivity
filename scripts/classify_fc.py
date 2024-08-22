@@ -20,9 +20,9 @@ n_parcels = 400  # or 400
 # number of splits for cross validation
 n_splits = 50
 # do within each task or across all tasks
-within_task = True
+within_task = False
 # trim to use
-trim = None
+trim = 293
 # we will use the resting state and all the movie-watching sessions
 tasks = [
     "RestingState",
@@ -49,7 +49,9 @@ for cov in cov_estimators:
 # cache and root output directory
 data_root = "/storage/store3/work/haggarwa/connectivity/data/"
 # results directory
-results = "/storage/store3/work/haggarwa/connectivity/results"
+results = (
+    "/storage/store3/work/haggarwa/connectivity/results/wo_extra_GBU_runs"
+)
 os.makedirs(results, exist_ok=True)
 
 if within_task:
