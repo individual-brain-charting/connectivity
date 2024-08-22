@@ -33,7 +33,7 @@ os.makedirs(output, exist_ok=True)
 
 # variables first set of connectomes
 n_parcels = 200
-tasktype = "domain"
+tasktype = "natural"
 trim_length = None
 
 # load both sets of connectomes
@@ -48,7 +48,7 @@ connectomes = pd.read_pickle(
 connectomes["trim_length"] = trim_length
 
 # dataset to keep
-datasets = ["HCP900", "ibc"]
+datasets = ["thelittleprince", "ibc"]
 
 connectomes = connectomes[connectomes["dataset"].isin(datasets)]
 
@@ -59,18 +59,18 @@ tasks = [
     # "GoodBadUgly",
     # "MonkeyKingdom",
     # "Mario",
-    # "LePetitPrince",
+    "LePetitPrince",
     # "ArchiStandard",
     # "ArchiSpatial",
     # "ArchiSocial",
     # "ArchiEmotional",
-    "HcpEmotion",
-    "HcpGambling",
-    "HcpLanguage",
-    "HcpMotor",
-    "HcpRelational",
-    "HcpSocial",
-    "HcpWm",
+    # "HcpEmotion",
+    # "HcpGambling",
+    # "HcpLanguage",
+    # "HcpMotor",
+    # "HcpRelational",
+    # "HcpSocial",
+    # "HcpWm",
 ]
 connectomes = connectomes[connectomes["tasks"].isin(tasks)]
 
@@ -89,6 +89,16 @@ cov_estimators = [
 ]
 # connectivity measures for each cov estimator
 measures = ["correlation", "partial correlation"]
+
+# Standardize the data
+scaler = StandardScaler()
+for cov in cov_estimators:
+    for measure in measures:
+        connectomes[f"{cov} {measure}"] = list(
+            scaler.fit_transform(
+                np.array(connectomes[f"{cov} {measure}"].tolist())
+            )
+        )
 
 results = []
 # loop over each cov estimator and measure
