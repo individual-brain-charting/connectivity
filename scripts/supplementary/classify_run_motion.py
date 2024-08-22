@@ -63,12 +63,10 @@ motion_data = motion_data[motion_data["dataset"] == "ibc"]
 n_jobs = 10
 # tasks to classify
 tasks = [
-    "RestingState",
+    "LePetitPrince",
     "Raiders",
     "GoodBadUgly",
     "MonkeyKingdom",
-    "Mario",
-    "LePetitPrince",
 ]
 
 results = []
@@ -83,9 +81,14 @@ for task in tqdm(tasks):
     motion_data_task = motion_data[motion_data["tasks"] == task]
 
     # get X, y and groups
-    X, mask = homogenize(motion_data_task["motion"].tolist())
-    y = np.array(motion_data_task["run_labels"].tolist())[mask]
-    groups = np.array(motion_data_task["subject_ids"].tolist())[mask]
+    X = motion_data_task["motion"].tolist()
+    y = np.array(motion_data_task["run_labels"].tolist())
+    groups = np.array(motion_data_task["subject_ids"].tolist())
+
+    # homogenize X, y and groups
+    X, mask = homogenize(X)
+    y = y[mask]
+    groups = groups[mask]
 
     # number of groups
     n_groups = len(np.unique(groups))
@@ -108,7 +111,13 @@ for task in tqdm(tasks):
         y,
         groups=groups,
         cv=cv_scheme,
-        scoring=["accuracy", "balanced_accuracy"],
+        scoring=[
+            "accuracy",
+            "balanced_accuracy",
+            "f1_macro",
+            "f1_weighted",
+            "f1_micro",
+        ],
         n_jobs=n_jobs,
         return_estimator=True,
         return_indices=True,
@@ -119,7 +128,13 @@ for task in tqdm(tasks):
         y,
         groups=groups,
         cv=cv_scheme,
-        scoring=["accuracy", "balanced_accuracy"],
+        scoring=[
+            "accuracy",
+            "balanced_accuracy",
+            "f1_macro",
+            "f1_weighted",
+            "f1_micro",
+        ],
         n_jobs=n_jobs,
         return_estimator=True,
         return_indices=True,
@@ -128,10 +143,16 @@ for task in tqdm(tasks):
         "task": [task] * n_groups,
         "accuracy": cv_result["test_accuracy"].tolist(),
         "balanced_accuracy": cv_result["test_balanced_accuracy"].tolist(),
+        "f1_macro": cv_result["test_f1_macro"].tolist(),
+        "f1_weighted": cv_result["test_f1_weighted"].tolist(),
+        "f1_micro": cv_result["test_f1_micro"].tolist(),
         "dummy_accuracy": cv_result_dummy["test_accuracy"].tolist(),
         "dummy_balanced_accuracy": cv_result_dummy[
             "test_balanced_accuracy"
         ].tolist(),
+        "dummy_f1_macro": cv_result_dummy["test_f1_macro"].tolist(),
+        "dummy_f1_weighted": cv_result_dummy["test_f1_weighted"].tolist(),
+        "dummy_f1_micro": cv_result_dummy["test_f1_micro"].tolist(),
         "train_indices": list(cv_result["indices"]["train"]),
         "test_indices": list(cv_result["indices"]["test"]),
     }
@@ -151,55 +172,72 @@ rest_colors = sns.color_palette("tab20c")[0]
 movie_colors = sns.color_palette("tab20c")[4:7]
 mario_colors = sns.color_palette("tab20c")[8]
 lpp_colors = sns.color_palette("tab20c")[12]
-color_palette = [rest_colors] + movie_colors + [mario_colors] + [lpp_colors]
-ax_score = sns.barplot(
-    y="task",
-    x="balanced_accuracy",
-    data=results,
-    orient="h",
-    palette=color_palette,
-    order=tasks,
-    hue="task",
-)
-# add accuracy labels on bars
-bar_label_color = "white"
-bar_label_weight = "bold"
-for i, container in enumerate(ax_score.containers):
-    plt.bar_label(
-        container,
-        fmt="%.1f",
-        label_type="edge",
-        fontsize="x-small",
-        padding=-45,
-        weight=bar_label_weight,
-        color=bar_label_color,
+color_palette = [lpp_colors] + movie_colors
+for score in [
+    "balanced_accuracy",
+    "f1_macro",
+    "f1_weighted",
+    "f1_micro",
+]:
+    ax_score = sns.barplot(
+        y="task",
+        x=score,
+        data=results,
+        orient="h",
+        palette=color_palette,
+        order=tasks,
+        hue="task",
     )
-ax_dummy = sns.barplot(
-    y="task",
-    x="dummy_balanced_accuracy",
-    data=results,
-    orient="h",
-    order=tasks,
-    facecolor=(0.8, 0.8, 0.8, 1),
-    hue="task",
-)
-plt.xlabel("Balanced Accuracy")
-plt.ylabel("Task")
-plt.title(f"Run classification based on motion parameters")
-# create legend for ax_dummy
-legend_elements = [
-    Patch(
-        facecolor=(0.8, 0.8, 0.8, 1), edgecolor="white", label="Chance-level"
+    # add accuracy labels on bars
+    bar_label_color = "white"
+    bar_label_weight = "bold"
+    for i, container in enumerate(ax_score.containers):
+        plt.bar_label(
+            container,
+            fmt="%.1f",
+            label_type="edge",
+            fontsize="x-small",
+            padding=-45,
+            weight=bar_label_weight,
+            color=bar_label_color,
+        )
+    ax_dummy = sns.barplot(
+        y="task",
+        x=f"dummy_{score}",
+        data=results,
+        orient="h",
+        order=tasks,
+        facecolor=(0.8, 0.8, 0.8, 1),
+        hue="task",
     )
-]
-plt.legend(
-    handles=legend_elements,
-    framealpha=0,
-    loc="center left",
-    bbox_to_anchor=(1, 0.5),
-)
-plot_file = "classify_run_motion"
-plt.savefig(os.path.join(plots_path, f"{plot_file}.png"), bbox_inches="tight")
-plt.savefig(os.path.join(plots_path, f"{plot_file}.svg"), bbox_inches="tight")
-
-plt.close()
+    if score == "balanced_accuracy":
+        plt.xlabel("Accuracy")
+    else:
+        plt.xlabel("F1 score")
+    plt.ylabel("Task")
+    # create legend for ax_dummy
+    legend_elements = [
+        Patch(
+            facecolor=(0.8, 0.8, 0.8, 1),
+            edgecolor="white",
+            label="Chance-level",
+        )
+    ]
+    plt.legend(
+        handles=legend_elements,
+        framealpha=0,
+        loc="center left",
+        bbox_to_anchor=(1, 0.5),
+    )
+    plot_file = "classify_run_motion"
+    fig = plt.gcf()
+    fig.set_size_inches(6, 3)
+    plt.savefig(
+        os.path.join(plots_path, f"{plot_file}_{score}.png"),
+        bbox_inches="tight",
+    )
+    plt.savefig(
+        os.path.join(plots_path, f"{plot_file}_{score}.svg"),
+        bbox_inches="tight",
+    )
+    plt.close()

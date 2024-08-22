@@ -55,21 +55,21 @@ dataset_task = {
         "HcpSocial",
         "HcpWm",
     ],
-    "HCP900": [
-        "EMOTION",
-        "GAMBLING",
-        "LANGUAGE",
-        "MOTOR",
-        "RELATIONAL",
-        "SOCIAL",
-        "WM",
-    ],
-    "archi": [
-        "ArchiStandard",
-        "ArchiSpatial",
-        "ArchiSocial",
-        "ArchiEmotional",
-    ],
+    # "HCP900": [
+    #     "EMOTION",
+    #     "GAMBLING",
+    #     "LANGUAGE",
+    #     "MOTOR",
+    #     "RELATIONAL",
+    #     "SOCIAL",
+    #     "WM",
+    # ],
+    # "archi": [
+    #     "ArchiStandard",
+    #     "ArchiSpatial",
+    #     "ArchiSocial",
+    #     "ArchiEmotional",
+    # ],
 }
 
 
@@ -121,8 +121,13 @@ for dataset, tasks in dataset_task.items():
                             dataset,
                         )
                         confounds = np.loadtxt(confounds)
-                        # flatten confounds
-                        confounds = confounds.flatten()
+                        motion_diff = np.diff(confounds, axis=0)
+                        # calculate framewise displacement
+                        confounds = np.sum(
+                            np.abs(motion_diff[:, 0:3])
+                            + 50 * np.abs(motion_diff[:, 3:]),
+                            axis=1,
+                        )
                     motions.append(confounds)
                     subject_ids.append(subject)
                     run_labels_.append(run_label)
