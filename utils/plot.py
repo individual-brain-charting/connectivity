@@ -103,28 +103,6 @@ def get_clas_cov_measure(classify, cov_estimators, measures):
                 yield clas, cov, measure
 
 
-def fit_classifier(clas, cov, measure, func_data, output_dir):
-    weights_file = os.path.join(
-        output_dir, f"{clas}_{cov} {measure}_weights.npy"
-    )
-    if os.path.exists(weights_file):
-        print(f"skipping {cov} {measure}, already done")
-        pass
-    else:
-        if clas == "Tasks":
-            classes = func_data["tasks"].to_numpy(dtype=object)
-        elif clas == "Subjects":
-            classes = func_data["subject_ids"].to_numpy(dtype=object)
-        elif clas == "Runs":
-            func_data["run_task"] = (
-                func_data["run_labels"] + "_" + func_data["tasks"]
-            )
-            classes = func_data["run_task"].to_numpy(dtype=object)
-        data = np.array(func_data[f"{cov} {measure}"].values.tolist())
-        classifier = LinearSVC(max_iter=100000, dual="auto").fit(data, classes)
-        np.save(weights_file, classifier.coef_)
-
-
 def get_network_labels(atlas):
     networks = atlas["labels"].astype("U")
     hemi_network_labels = []

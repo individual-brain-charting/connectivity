@@ -103,10 +103,9 @@ def get_niftis(task, subject, session, data_root_path, dataset="ibc"):
             # the sessions in Raiders and GoodBadUgly
             if task == "Raiders" and int(run_num) > 8:
                 continue
-            elif (
-                task == "GoodBadUgly"
-                and int(run_num) > 17
-                and int(run_num) < 3
+            # also skip short runs at the beginning and end of GoodBadUgly
+            elif task == "GoodBadUgly" and (
+                int(run_num) > 17 or int(run_num) < 3
             ):
                 continue
 

@@ -1,8 +1,18 @@
 """Utility functions for calculating similarity between connectivity matrices.
 """
+
 import numpy as np
 import pandas as pd
 from scipy import stats
+
+
+def drop_nan_samples(X):
+    nan_indices = np.where(np.isnan(X).all(axis=1))
+    if len(nan_indices[0]) > 0:
+        print(f"\n Dropping {len(nan_indices[0])} samples with NaNs")
+    X = np.delete(X, nan_indices, axis=0)
+
+    return X
 
 
 def mean_connectivity(data, tasks, cov_estimators, measures):
@@ -38,6 +48,7 @@ def mean_connectivity(data, tasks, cov_estimators, measures):
                 for measure in measures:
                     connectivity = df[cov + " " + measure].tolist()
                     connectivity = np.array(connectivity)
+                    connectivity = drop_nan_samples(connectivity)
                     connectivity = connectivity.mean(axis=0)
                     av_connectivity.append(
                         {
