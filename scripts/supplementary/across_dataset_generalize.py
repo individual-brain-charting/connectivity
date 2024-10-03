@@ -33,7 +33,7 @@ os.makedirs(output, exist_ok=True)
 
 # variables first set of connectomes
 n_parcels = 200
-tasktype = "natural"
+tasktype = "domain"
 trim_length = None
 
 # load both sets of connectomes
@@ -48,7 +48,7 @@ connectomes = pd.read_pickle(
 connectomes["trim_length"] = trim_length
 
 # dataset to keep
-datasets = ["thelittleprince", "ibc"]
+datasets = ["HCP900", "ibc"]
 
 connectomes = connectomes[connectomes["dataset"].isin(datasets)]
 
@@ -59,18 +59,18 @@ tasks = [
     # "GoodBadUgly",
     # "MonkeyKingdom",
     # "Mario",
-    "LePetitPrince",
+    # "LePetitPrince",
     # "ArchiStandard",
     # "ArchiSpatial",
     # "ArchiSocial",
     # "ArchiEmotional",
-    # "HcpEmotion",
-    # "HcpGambling",
-    # "HcpLanguage",
-    # "HcpMotor",
-    # "HcpRelational",
-    # "HcpSocial",
-    # "HcpWm",
+    "HcpEmotion",
+    "HcpGambling",
+    "HcpLanguage",
+    "HcpMotor",
+    "HcpRelational",
+    "HcpSocial",
+    "HcpWm",
 ]
 connectomes = connectomes[connectomes["tasks"].isin(tasks)]
 
@@ -184,14 +184,12 @@ for cov in cov_estimators:
             scores = {
                 "accuracy": accuracy_score(y_predict, pred),
                 "balanced_accuracy": balanced_accuracy_score(y_predict, pred),
-                "f1": f1_score(y_predict, pred, average="weighted"),
+                "f1": f1_score(y_predict, pred, average="macro"),
                 "dummy_accuracy": accuracy_score(y_predict, dummy_pred),
                 "dummy_balanced_accuracy": balanced_accuracy_score(
                     y_predict, dummy_pred
                 ),
-                "dummy_f1": f1_score(
-                    y_predict, dummy_pred, average="weighted"
-                ),
+                "dummy_f1": f1_score(y_predict, dummy_pred, average="macro"),
                 "dataset": data_name,
                 "cov measure": f"{cov} {measure}",
                 "direction": id_string,

@@ -17,7 +17,7 @@ results_root = (
 plots_root = (
     "/storage/store3/work/haggarwa/connectivity/plots/wo_extra_GBU_runs"
 )
-n_parcels = 400
+n_parcels = 200
 trim_length = None
 tasktype = "natural"
 do_hatch = False
@@ -87,6 +87,7 @@ for score in ["balanced_accuracy", "f1_macro"]:
                 palette=sns.color_palette("pastel")[0:1],
                 order=order,
                 facecolor=(0.8, 0.8, 0.8, 1),
+                err_kws={"ls": ":"},
             )
             if score == "balanced_accuracy":
                 plt.xlabel("Accuracy")

@@ -113,7 +113,7 @@ for task in tqdm(tasks):
         y,
         groups=groups,
         cv=cv_scheme,
-        scoring=["accuracy", "balanced_accuracy", "f1_weighted"],
+        scoring=["accuracy", "balanced_accuracy", "f1_macro"],
         n_jobs=n_jobs,
         return_estimator=True,
         return_indices=True,
@@ -124,7 +124,7 @@ for task in tqdm(tasks):
         y,
         groups=groups,
         cv=cv_scheme,
-        scoring=["accuracy", "balanced_accuracy", "f1_weighted"],
+        scoring=["accuracy", "balanced_accuracy", "f1_macro"],
         n_jobs=n_jobs,
         return_estimator=True,
         return_indices=True,
@@ -133,12 +133,12 @@ for task in tqdm(tasks):
         "task": [task] * n_groups,
         "accuracy": cv_result["test_accuracy"].tolist(),
         "balanced_accuracy": cv_result["test_balanced_accuracy"].tolist(),
-        "f1_score": cv_result["test_f1_weighted"].tolist(),
+        "f1_score": cv_result["test_f1_macro"].tolist(),
         "dummy_accuracy": cv_result_dummy["test_accuracy"].tolist(),
         "dummy_balanced_accuracy": cv_result_dummy[
             "test_balanced_accuracy"
         ].tolist(),
-        "dummy_f1_score": cv_result_dummy["test_f1_weighted"].tolist(),
+        "dummy_f1_score": cv_result_dummy["test_f1_macro"].tolist(),
         "train_indices": list(cv_result["indices"]["train"]),
         "test_indices": list(cv_result["indices"]["test"]),
     }
