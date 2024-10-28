@@ -35,6 +35,7 @@ def get_lower_tri_heatmap(
     fontsize=20,
     vmax=None,
     vmin=None,
+    fontweight="normal",
 ):
     mask = np.zeros_like(df)
     mask[np.triu_indices_from(mask)] = triu
@@ -82,14 +83,16 @@ def get_lower_tri_heatmap(
         ax.set_xticklabels(labels, rotation=40, ha="right", fontsize=fontsize)
         ax.set_yticklabels(labels, rotation=0, fontsize=fontsize)
     elif labels is not None and ticks is not None:
-        ax.set_xticks(ticks, labels, fontsize=fontsize)
-        ax.set_yticks(ticks, labels, fontsize=fontsize)
+        ax.set_xticks(
+            ticks, labels, fontsize=fontsize, rotation=40, ha="right"
+        )
+        ax.set_yticks(ticks, labels, fontsize=fontsize, rotation=45)
         ax.tick_params(left=True, bottom=True)
     else:
         ax.set_xticklabels([], fontsize=fontsize)
         ax.set_yticklabels([], fontsize=fontsize)
     if title is not None:
-        ax.set_title(title, fontsize=fontsize)
+        ax.set_title(title, fontsize=fontsize, fontweight=fontweight)
 
     # save to file
     fig = sns_plot.get_figure()
