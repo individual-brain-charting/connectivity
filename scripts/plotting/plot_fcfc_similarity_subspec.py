@@ -108,6 +108,8 @@ for cov in cov_estimators:
                     ),
                     title=f"{cov} {measure}",
                     fontsize=15,
+                    vmax=0.85,
+                    vmin=0.13,
                 )
             if centering == "centered":
                 print(

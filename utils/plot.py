@@ -33,6 +33,8 @@ def get_lower_tri_heatmap(
     diag=False,
     tril=False,
     fontsize=20,
+    vmax=None,
+    vmin=None,
 ):
     mask = np.zeros_like(df)
     mask[np.triu_indices_from(mask)] = triu
@@ -54,8 +56,8 @@ def get_lower_tri_heatmap(
         mask=mask,
         cmap=cmap,
         # cmap=cmap,
-        # vmax=0.008,
-        # vmin=0.003,
+        vmax=vmax,
+        vmin=vmin,
         # center=0,
         square=True,
         linewidths=0,
