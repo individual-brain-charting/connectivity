@@ -19,7 +19,7 @@ fc_root = (
     "/storage/store3/work/haggarwa/connectivity/results/wo_extra_GBU_runs"
 )
 sc_root = "/storage/store3/work/haggarwa/connectivity/results"
-n_parcels = 200
+n_parcels = 400
 trim_length = None
 
 fc_pkl = (
@@ -70,6 +70,7 @@ task_pairs = [
     ("GoodBadUgly", "SC"),
     ("MonkeyKingdom", "SC"),
     ("Mario", "SC"),
+    ("SC", "SC"),
 ]
 
 
