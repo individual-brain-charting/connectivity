@@ -50,7 +50,7 @@ fc_results = fc_results.rename(
     }
 )
 fc_results = fc_results[list(motion_results.columns)]
-fc_results["feature"] = "FC"
+fc_results["feature"] = "Unregularized correlation FC"
 motion_results["feature"] = "Frame-wise displacement"
 results = pd.concat([fc_results, motion_results], ignore_index=True)
 
@@ -83,7 +83,7 @@ for score in ["balanced_accuracy", "f1_macro"]:
         palette="Set1",
         order=tasks,
         hue="feature",
-        hue_order=["Frame-wise displacement", "FC"],
+        hue_order=["Frame-wise displacement", "Unregularized correlation FC"],
     )
     # add accuracy labels on bars
     for i, container in enumerate(ax_score.containers):
@@ -111,7 +111,7 @@ for score in ["balanced_accuracy", "f1_macro"]:
         order=tasks,
         facecolor=(0.8, 0.8, 0.8, 1),
         hue="feature",
-        hue_order=["Frame-wise displacement", "FC"],
+        hue_order=["Frame-wise displacement", "Unregularized correlation FC"],
     )
     if score == "balanced_accuracy":
         plt.xlabel("Accuracy")
