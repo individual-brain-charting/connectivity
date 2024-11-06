@@ -19,7 +19,7 @@ results_root = (
 plots_root = (
     "/storage/store3/work/haggarwa/connectivity/plots/wo_extra_GBU_runs/"
 )
-n_parcels = 200
+n_parcels = 400
 trim_length = None
 do_hatch = False
 
@@ -75,6 +75,14 @@ for centering in similarity_data["centering"].unique():
         d = {"FC measure": [], "Similarity": [], "Comparison": []}
         for _, row in df.iterrows():
             corr = row["matrix"].tolist()
+            n_subs = len(row["kept_subjects"])
+            # reshape to square matrix
+            matrix = row["matrix"].reshape((n_subs, n_subs))
+            # set upper triangle to nan to keep only lower triangle
+            only_lower = matrix.copy()
+            only_lower[np.triu_indices_from(only_lower, k=1)] = np.nan
+            # keep only non-nan values and convert to list
+            corr = only_lower[~np.isnan(only_lower)].tolist()
             d["Similarity"].extend(corr)
             d["FC measure"].extend([row["measure"]] * len(corr))
             d["Comparison"].extend([row["comparison"]] * len(corr))
