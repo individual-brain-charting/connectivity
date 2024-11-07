@@ -11,7 +11,7 @@ from utils.plot import insert_stats, wrap_labels
 
 sns.set_theme()
 sns.set_style("whitegrid")
-sns.set_context("talk")
+sns.set_context("talk", font_scale=1.6)
 
 results_root = (
     "/storage/store3/work/haggarwa/connectivity/results/wo_extra_GBU_runs"
@@ -112,7 +112,7 @@ for centering in similarity_data["centering"].unique():
             fmt="%.2f",
             label_type="edge",
             fontsize="x-small",
-            padding=-45,
+            padding=-75,
             weight="bold",
             color="white",
         )
