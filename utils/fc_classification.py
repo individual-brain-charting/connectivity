@@ -27,8 +27,7 @@ def drop_nan_samples(X, y, groups, task_label, connectivity_measure, classify):
         )
     X = np.delete(X, nan_indices, axis=0)
     y = np.delete(y, nan_indices, axis=0)
-    if groups:
-        groups = np.delete(groups, nan_indices, axis=0)
+    groups = np.delete(groups, nan_indices, axis=0)
 
     return X, y, groups
 
@@ -168,7 +167,7 @@ def classify_connectivity(
     # weights = classifier.coef_
 
     # fit a dummy classifier to get chance level
-    dummy = DummyClassifier(strategy="stratified").fit(
+    dummy = DummyClassifier(strategy="most_frequent").fit(
         connectomes[train], classes[train]
     )
     dummy_predictions = dummy.predict(connectomes[test])
