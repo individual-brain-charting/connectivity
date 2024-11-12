@@ -49,6 +49,12 @@ fc_results = fc_results.rename(
         "test_sets": "test_indices",
     }
 )
+motion_results = motion_results.rename(
+    columns={
+        "dummy_balanced_accuracy": "dummy_balanced_accuracy_mostfreq",
+        "dummy_f1_macro": "dummy_f1_macro_mostfreq",
+    }
+)
 fc_results = fc_results[list(motion_results.columns)]
 fc_results["feature"] = "Unregularized correlation FC"
 motion_results["feature"] = "Frame-wise displacement"
@@ -106,7 +112,7 @@ for score in ["balanced_accuracy", "f1_macro"]:
         )
     ax_dummy = sns.barplot(
         y="task",
-        x=f"dummy_{score}",
+        x=f"dummy_{score}_mostfreq",
         data=results,
         orient="h",
         order=tasks,
