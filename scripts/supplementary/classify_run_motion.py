@@ -25,18 +25,10 @@ def homogenize(data):
     """Keep only runs with the maximum number of samples. If multiple runs have the same number of samples, cut the longer runs to the length of the shortest run."""
 
     lengths = [len(run) for run in data]
-    unique, counts = np.unique(lengths, return_counts=True)
-    # check if all elements in counts are the same
-    if len(set(counts)) == 1:
-        # cut all runs to the length of the shortest run
-        min_length = unique[np.argmin(counts)]
-        data = [run[:min_length] for run in data]
-        return np.array(data), np.ones(len(data)).astype(bool)
-    else:
-        # indices where count is max
-        max_count_length = unique[np.argmax(counts)]
-        mask = lengths == max_count_length
-        return np.array(list(compress(data, mask))), mask
+    min_length = min(lengths)
+    # cut all runs to the length of the shortest run
+    data = [run[:min_length] for run in data]
+    return np.array(data), np.ones(len(data)).astype(bool)
 
 
 #### INPUTS
