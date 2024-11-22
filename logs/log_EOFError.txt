@@ -1,0 +1,6 @@
+/storage/store3/work/haggarwa/connectivity/data/HCP900/645551/MNINonLinear/Results/tfMRI_WM_RL/tfMRI_WM_RL.nii.gz
+/storage/store3/work/haggarwa/connectivity/data/HCP900/654350/MNINonLinear/Results/tfMRI_RELATIONAL_LR/tfMRI_RELATIONAL_LR.nii.gz
+/storage/store3/work/haggarwa/connectivity/data/HCP900/654350/MNINonLinear/Results/tfMRI_SOCIAL_LR/tfMRI_SOCIAL_LR.nii.gz
+/storage/store3/work/haggarwa/connectivity/data/HCP900/654350/MNINonLinear/Results/tfMRI_MOTOR_LR/tfMRI_MOTOR_LR.nii.gz
+/storage/store3/work/haggarwa/connectivity/data/HCP900/645551/MNINonLinear/Results/tfMRI_LANGUAGE_RL/tfMRI_LANGUAGE_RL.nii.gz
+/storage/store3/work/haggarwa/connectivity/data/HCP900/645551/MNINonLinear/Results/tfMRI_WM_RL/tfMRI_WM_RL.nii.gz
