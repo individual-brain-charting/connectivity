@@ -26,37 +26,38 @@ fc_results_root = (
 )
 tasktype = "natural"
 
-for n_parcels in [400, 200]:
-    for trim_length in [293, None]:
-        original_dir = f"classification-within_tasktype-{tasktype}_nparcels-{n_parcels}_trim-{trim_length}"
-        new_dummies_dir = f"classification-within_tasktype-{tasktype}_nparcels-{n_parcels}_trim-{trim_length}_dummy_mostfreq"
-        print(f"Original: {original_dir}")
-        original_path = os.path.join(
-            fc_results_root, original_dir, "all_results.pkl"
-        )
-        new_dummies_path = os.path.join(
-            fc_results_root, new_dummies_dir, "all_results.pkl"
-        )
-        original = pd.read_pickle(original_path)
-        new_dummies = pd.read_pickle(new_dummies_path)
-        if trim_length == 293:
-            new_dummies = new_dummies[new_dummies["classes"] == "Runs"]
-        original.reset_index(inplace=True, drop=True)
-        new_dummies.reset_index(inplace=True, drop=True)
-        for col in list(original.columns):
-            if col == "dummy_f1_score":
-                continue
-            elif "dummy" in col:
-                print(col)
-                new_col = f"{col}_mostfreq"
-                original[new_col] = new_dummies[col]
-                print(original[new_col].equals(new_dummies[col]))
-            else:
-                print(col)
-                try:
-                    print(original[col].equals(new_dummies[col]))
-                except KeyError:
-                    print(f"KeyError, {col} not in new_dummies")
+for classification_type in ["across", "within"]:
+    for n_parcels in [400, 200]:
+        for trim_length in [293, None]:
+            original_dir = f"classification-{classification_type}_tasktype-{tasktype}_nparcels-{n_parcels}_trim-{trim_length}"
+            new_dummies_dir = f"classification-{classification_type}_tasktype-{tasktype}_nparcels-{n_parcels}_trim-{trim_length}_dummy_mostfreq"
+            print(f"Original: {original_dir}")
+            original_path = os.path.join(
+                fc_results_root, original_dir, "all_results.pkl"
+            )
+            new_dummies_path = os.path.join(
+                fc_results_root, new_dummies_dir, "all_results.pkl"
+            )
+            original = pd.read_pickle(original_path)
+            new_dummies = pd.read_pickle(new_dummies_path)
+            if trim_length == 293:
+                new_dummies = new_dummies[new_dummies["classes"] == "Runs"]
+            original.reset_index(inplace=True, drop=True)
+            new_dummies.reset_index(inplace=True, drop=True)
+            for col in list(original.columns):
+                if col == "dummy_f1_score":
+                    continue
+                elif "dummy" in col:
+                    print(col)
+                    new_col = f"{col}_mostfreq"
+                    original[new_col] = new_dummies[col]
+                    print(original[new_col].equals(new_dummies[col]))
+                else:
+                    print(col)
+                    try:
+                        print(original[col].equals(new_dummies[col]))
+                    except KeyError:
+                        print(f"KeyError, {col} not in new_dummies")
 
-        original.to_pickle(original_path)
-        print(f"Saved {original_path}")
+            original.to_pickle(original_path)
+            print(f"Saved {original_path}")

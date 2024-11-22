@@ -18,7 +18,7 @@ plots_root = (
     "/storage/store3/work/haggarwa/connectivity/plots/wo_extra_GBU_runs"
 )
 n_parcels = 200
-trim_length = None
+trim_length = 293
 tasktype = "natural"
 do_hatch = False
 
@@ -81,7 +81,7 @@ for score in ["balanced_accuracy", "f1_macro"]:
             wrap_labels(ax_score, 20)
             sns.barplot(
                 y="connectivity",
-                x=f"dummy_{score}",
+                x=f"dummy_{score}_mostfreq",
                 data=df_,
                 orient="h",
                 palette=sns.color_palette("pastel")[0:1],

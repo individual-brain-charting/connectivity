@@ -20,8 +20,8 @@ results_root = (
 plots_root = (
     "/storage/store3/work/haggarwa/connectivity/plots/wo_extra_GBU_runs"
 )
-n_parcels = 200
-trim_length = 293
+n_parcels = 400
+trim_length = None
 tasktype = "natural"
 do_hatch = False
 
@@ -174,7 +174,7 @@ for score in ["balanced_accuracy", "f1_macro"]:
                         thisbar.set_hatch(hatches[i])
             ax_chance = sns.barplot(
                 y="connectivity",
-                x="dummy_" + score,
+                x="dummy_" + score + "_mostfreq",
                 data=df_,
                 orient="h",
                 hue="task_label",

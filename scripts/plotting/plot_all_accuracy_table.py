@@ -4,7 +4,7 @@ import seaborn as sns
 
 ### table of all accuracies ###
 
-n_parcels = 400
+n_parcels = 200
 trim_length = 293
 tasktype = "natural"
 
@@ -59,9 +59,9 @@ for clas in classify:
     classifying_df.reset_index(inplace=True, drop=True)
     for metric in [
         "balanced_accuracy",
-        "dummy_balanced_accuracy",
+        "dummy_balanced_accuracy_mostfreq",
         "f1_macro",
-        "dummy_f1_macro",
+        "dummy_f1_macro_mostfreq",
     ]:
         mean_acc = (
             classifying_df.groupby(["task_label", "connectivity"])[metric]
