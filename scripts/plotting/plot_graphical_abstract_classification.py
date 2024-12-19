@@ -2,6 +2,8 @@ import os
 import pandas as pd
 import seaborn as sns
 import matplotlib.pyplot as plt
+from matplotlib.patches import Patch
+
 
 # add utils to path
 # sys.path.append(os.path.join(os.path.dirname(__file__), ".."))
@@ -73,7 +75,7 @@ for score in ["f1_macro"]:
         wrap_labels(ax_score, 10)
         sns.barplot(
             y="connectivity",
-            x=f"dummy_{score}",
+            x=f"dummy_{score}_mostfreq",
             data=df_,
             orient="h",
             palette=sns.color_palette("pastel")[0:1],
@@ -85,6 +87,21 @@ for score in ["f1_macro"]:
         else:
             plt.xlabel("F1 score")
         plt.ylabel("")
+        # create custom legend
+        # replace lines with patches of color for legend
+        handles = [
+            Patch(color=sns.color_palette()[0], label="LinearSVC"),
+            Patch(
+                color=sns.color_palette("pastel")[0], label="DummyClassifier"
+            ),
+        ]
+        ax_score.legend(
+            handles=handles,
+            framealpha=0,
+            bbox_to_anchor=(1, 0.5),
+            loc="center left",
+            title="Classifier",
+        )
         fig = plt.gcf()
         fig.set_size_inches(6, 2.5)
         if clas == "Tasks":
