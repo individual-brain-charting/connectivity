@@ -2,6 +2,7 @@ import os
 import pandas as pd
 import seaborn as sns
 import matplotlib.pyplot as plt
+
 import sys
 
 # add utils to path
@@ -164,7 +165,7 @@ for score in ["balanced_accuracy", "f1_macro"]:
                         thisbar.set_hatch(hatches[i])
             ax_chance = sns.barplot(
                 y="connectivity",
-                x="dummy_" + score + "_mostfreq",
+                x="dummy_" + score,
                 data=df_,
                 orient="h",
                 hue="task_label",
