@@ -14,7 +14,7 @@ from utils.fc_classification import do_cross_validation
 
 #### INPUTS
 # number of jobs to run in parallel
-n_jobs = 10
+n_jobs = 20
 # number of parcels
 n_parcels = 400  # or 400
 # number of splits for cross validation
