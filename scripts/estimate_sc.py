@@ -4,12 +4,12 @@ This script:
 Following https://community.mrtrix.org/t/registration-using-transformations-generated-from-other-packages/2259
 2) transforms atlas to diffusion native space
 3) creates structural connectivity matrix between ROIs from a given
-atlas (both in mni and transformed to native space) for given diffusion tracts 
+atlas (both in mni and transformed to native space) for given diffusion tracts
 (both transformed to mni and native space) using MRtrix's tck2connectome function.
 Connectivity between two ROIs here is measured as per-bundle sum of SIFT2
 weights normalised by ROI volume (-scale_invnodevol parameter)
 See tck2connectome doc: https://mrtrix.readthedocs.io/en/latest/reference/commands/tck2connectome.html#tck2connectome
-Discussion on using original SIFT2 weights (calculated before non-linear 
+Discussion on using original SIFT2 weights (calculated before non-linear
 transformation of tracts): https://community.mrtrix.org/t/are-sift2-weights-still-interpretable-following-non-linear-transformation/6162
 """
 
@@ -162,7 +162,7 @@ def pipeline(sub, ses, data_root, out_root, atlas, mni_nifti):
 
 if __name__ == "__main__":
     # cache and output directory
-    cache = OUT_ROOT = "/storage/store2/work/haggarwa/"
+    cache = OUT_ROOT = "/data/parietal/store2/work/haggarwa/"
     # get atlas
     atlas = datasets.fetch_atlas_schaefer_2018(
         data_dir=cache, resolution_mm=1, n_rois=200

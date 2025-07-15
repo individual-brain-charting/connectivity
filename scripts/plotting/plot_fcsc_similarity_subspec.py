@@ -15,11 +15,9 @@ sns.set_style("whitegrid")
 sns.set_context("talk")
 
 
-results_root = (
-    "/storage/store3/work/haggarwa/connectivity/results/wo_extra_GBU_runs"
-)
+results_root = "/data/parietal/store3/work/haggarwa/connectivity/results/wo_extra_GBU_runs"
 plots_root = (
-    "/storage/store3/work/haggarwa/connectivity/plots/wo_extra_GBU_runs/"
+    "/data/parietal/store3/work/haggarwa/connectivity/plots/wo_extra_GBU_runs/"
 )
 n_parcels = 200
 trim_length = None

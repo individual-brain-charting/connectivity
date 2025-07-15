@@ -1,5 +1,5 @@
-"""This script creates 2D UMAP representations of connectomes with different run 
-lengths, to assess the effect of run length on the classification of 
+"""This script creates 2D UMAP representations of connectomes with different run
+lengths, to assess the effect of run length on the classification of
 connectomes"""
 
 import umap
@@ -12,8 +12,8 @@ from matplotlib import pyplot as plt
 import seaborn as sns
 
 
-results = "/storage/store3/work/haggarwa/connectivity/results/"
-plots = "/storage/store3/work/haggarwa/connectivity/plots/umap_runlength"
+results = "/data/parietal/store3/work/haggarwa/connectivity/results/"
+plots = "/data/parietal/store3/work/haggarwa/connectivity/plots/umap_runlength"
 os.makedirs(plots, exist_ok=True)
 
 # variables first set of connectomes

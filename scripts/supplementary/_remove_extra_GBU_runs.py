@@ -4,10 +4,8 @@ import seaborn as sns
 from sklearn.metrics import f1_score
 from glob import glob
 
-results_root = "/storage/store3/work/haggarwa/connectivity/results"
-output_dir = (
-    "/storage/store3/work/haggarwa/connectivity/results/wo_extra_GBU_runs"
-)
+results_root = "/data/parietal/store3/work/haggarwa/connectivity/results"
+output_dir = "/data/parietal/store3/work/haggarwa/connectivity/results/wo_extra_GBU_runs"
 os.makedirs(output_dir, exist_ok=True)
 
 wildcard = f"connectomes*natural*.pkl"

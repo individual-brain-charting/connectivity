@@ -3,7 +3,7 @@ from nilearn import datasets
 import numpy as np
 import matplotlib.pyplot as plt
 
-cache = "/storage/store2/work/haggarwa/"
+cache = "/data/parietal/store2/work/haggarwa/"
 
 atlas = datasets.fetch_atlas_schaefer_2018(
     data_dir=cache, n_rois=100, resolution_mm=2

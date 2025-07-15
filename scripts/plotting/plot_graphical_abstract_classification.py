@@ -13,11 +13,9 @@ sns.set_theme()
 sns.set_style("whitegrid")
 sns.set_context("talk", font_scale=1.6)
 
-results_root = (
-    "/storage/store3/work/haggarwa/connectivity/results/wo_extra_GBU_runs"
-)
+results_root = "/data/parietal/store3/work/haggarwa/connectivity/results/wo_extra_GBU_runs"
 plots_root = (
-    "/storage/store3/work/haggarwa/connectivity/plots/graphical_abstract"
+    "/data/parietal/store3/work/haggarwa/connectivity/plots/graphical_abstract"
 )
 n_parcels = 400
 trim_length = None

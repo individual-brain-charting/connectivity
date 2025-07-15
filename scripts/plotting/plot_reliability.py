@@ -27,7 +27,7 @@ tasks = [
     "GoodBadUgly",
 ]
 # load the data
-DATA_ROOT = "/storage/store2/work/haggarwa/"
+DATA_ROOT = "/data/parietal/store2/work/haggarwa/"
 n_parcels = 200
 results_dir = f"reliability_{n_parcels}"
 reliability_data = pd.read_pickle(

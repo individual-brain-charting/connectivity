@@ -20,7 +20,7 @@ sns.set_context("talk")
 
 ### fc-sc similarity, network-wise matrix
 
-cache = DATA_ROOT = "/storage/store2/work/haggarwa/"
+cache = DATA_ROOT = "/data/parietal/store2/work/haggarwa/"
 
 labels_fmt = "network"
 n_parcels = 400

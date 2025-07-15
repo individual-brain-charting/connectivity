@@ -1,4 +1,4 @@
-"""Pipeline to calculate functional connectivity from external GBU data 
+"""Pipeline to calculate functional connectivity from external GBU data
 (from Mantini et al. 2012)"""
 
 import os
@@ -135,11 +135,9 @@ def get_connectomes(cov, ts):
 if __name__ == "__main__":
     n_jobs = 50
     # external data root directory
-    external_ROOT = (
-        "/storage/store2/data/GoodBadUgly_DanteMantini_KULeuven/human_niftis"
-    )
+    external_ROOT = "/data/parietal/store2/data/GoodBadUgly_DanteMantini_KULeuven/human_niftis"
     # output root directory
-    cache = DATA_ROOT = "/storage/store2/work/haggarwa/"
+    cache = DATA_ROOT = "/data/parietal/store2/work/haggarwa/"
     # output directory
     output_dir = os.path.join(
         DATA_ROOT, f"external_connectivity_{time.strftime('%Y%m%d-%H%M%S')}"

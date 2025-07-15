@@ -62,7 +62,7 @@ def paint_table(they_did_these, output_dir=None, figsize=(8, 16)):
 
 
 plots_root = (
-    "/storage/store3/work/haggarwa/connectivity/plots/wo_extra_GBU_runs/"
+    "/data/parietal/store3/work/haggarwa/connectivity/plots/wo_extra_GBU_runs/"
 )
 out_dir_name = "who_did_what"
 output_dir = os.path.join(plots_root, out_dir_name)

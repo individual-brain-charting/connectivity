@@ -4,9 +4,7 @@ import seaborn as sns
 from sklearn.metrics import f1_score
 from glob import glob
 
-results_root = (
-    "/storage/store3/work/haggarwa/connectivity/results/wo_extra_GBU_runs"
-)
+results_root = "/data/parietal/store3/work/haggarwa/connectivity/results/wo_extra_GBU_runs"
 
 dir_name = f"classification*"
 results_pkl = os.path.join(results_root, dir_name, "all_results.pkl")

@@ -1,4 +1,4 @@
-"""This script creates 2D UMAP representations of connectomes from  different type of tasks (natural vs. domain), to assess the effect of task type on the classification of 
+"""This script creates 2D UMAP representations of connectomes from  different type of tasks (natural vs. domain), to assess the effect of task type on the classification of
 connectomes"""
 
 import umap
@@ -11,8 +11,8 @@ from matplotlib import pyplot as plt
 import seaborn as sns
 
 
-results = "/storage/store3/work/haggarwa/connectivity/results/"
-plots = "/storage/store3/work/haggarwa/connectivity/plots/umap_tasktype"
+results = "/data/parietal/store3/work/haggarwa/connectivity/results/"
+plots = "/data/parietal/store3/work/haggarwa/connectivity/plots/umap_tasktype"
 os.makedirs(plots, exist_ok=True)
 
 # variables first set of connectomes

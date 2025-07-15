@@ -3,7 +3,7 @@ from glob import glob
 import os
 
 # Load the data
-results = "/storage/store3/work/haggarwa/connectivity/results/"
+results = "/data/parietal/store3/work/haggarwa/connectivity/results/"
 # find pickle file with connectomes for 200 parcels, naturalistic tasks,
 # and no trimming
 connectome_file = glob(

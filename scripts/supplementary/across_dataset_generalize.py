@@ -27,7 +27,7 @@ def drop_nan_samples(X, y):
     return X, y
 
 
-results = "/storage/store3/work/haggarwa/connectivity/results/"
+results = "/data/parietal/store3/work/haggarwa/connectivity/results/"
 output = os.path.join(results, "across_dataset_generalize")
 os.makedirs(output, exist_ok=True)
 

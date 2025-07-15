@@ -1,4 +1,4 @@
-"""Pipeline to calculate functional connectivity for IBC GBU runs synced 
+"""Pipeline to calculate functional connectivity for IBC GBU runs synced
 with external GBU data (from Mantini et al. 2012)"""
 
 import os
@@ -145,7 +145,7 @@ def get_connectomes(cov, ts):
 if __name__ == "__main__":
     n_jobs = 10
     # output root directory
-    cache = DATA_ROOT = "/storage/store2/work/haggarwa/"
+    cache = DATA_ROOT = "/data/parietal/store2/work/haggarwa/"
     # output directory
     output_dir = os.path.join(
         DATA_ROOT,

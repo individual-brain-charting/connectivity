@@ -41,7 +41,7 @@ f1_weighted
 KeyError, f1_weighted not in new_dummies
 dummy_f1_weighted
 True
-Saved /storage/store3/work/haggarwa/connectivity/results/wo_extra_GBU_runs/classification-within_ta
+Saved /data/parietal/store3/work/haggarwa/connectivity/results/wo_extra_GBU_runs/classification-within_ta
 sktype-natural_nparcels-400_trim-293/all_results.pkl
 Original: classification-within_tasktype-natural_nparcels-400_trim-None
 LinearSVC_accuracy
@@ -88,7 +88,7 @@ f1_weighted
 KeyError, f1_weighted not in new_dummies
 dummy_f1_weighted
 True
-Saved /storage/store3/work/haggarwa/connectivity/results/wo_extra_GBU_runs/classification-within_ta
+Saved /data/parietal/store3/work/haggarwa/connectivity/results/wo_extra_GBU_runs/classification-within_ta
 sktype-natural_nparcels-400_trim-None/all_results.pkl
 Original: classification-within_tasktype-natural_nparcels-200_trim-293
 LinearSVC_accuracy
@@ -135,7 +135,7 @@ f1_weighted
 KeyError, f1_weighted not in new_dummies
 dummy_f1_weighted
 True
-Saved /storage/store3/work/haggarwa/connectivity/results/wo_extra_GBU_runs/classification-within_ta
+Saved /data/parietal/store3/work/haggarwa/connectivity/results/wo_extra_GBU_runs/classification-within_ta
 sktype-natural_nparcels-200_trim-293/all_results.pkl
 Original: classification-within_tasktype-natural_nparcels-200_trim-None
 LinearSVC_accuracy
@@ -182,7 +182,7 @@ f1_weighted
 KeyError, f1_weighted not in new_dummies
 dummy_f1_weighted
 True
-Saved /storage/store3/work/haggarwa/connectivity/results/wo_extra_GBU_runs/classification-within_ta
+Saved /data/parietal/store3/work/haggarwa/connectivity/results/wo_extra_GBU_runs/classification-within_ta
 sktype-natural_nparcels-200_trim-None/all_results.pkl
 
 

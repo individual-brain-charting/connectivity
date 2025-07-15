@@ -8,12 +8,12 @@ sns.set_style("whitegrid")
 sns.set_context("talk")
 
 ### plot fmri image for methods
-cache = DATA_ROOT = "/storage/store/work/haggarwa/"
-DATA_ROOT2 = "/storage/store2/work/haggarwa/"
+cache = DATA_ROOT = "/data/parietal/store/work/haggarwa/"
+DATA_ROOT2 = "/data/parietal/store2/work/haggarwa/"
 output_dir = os.path.join(DATA_ROOT2, "fmri_methods")
 os.makedirs(output_dir, exist_ok=True)
 
-fmri_file = "/storage/store2/data/ibc/derivatives/sub-04/ses-12/func/wrdcsub-04_ses-12_task-MTTNS_dir-pa_run-01_bold.nii.gz"
+fmri_file = "/data/parietal/store2/data/ibc/derivatives/sub-04/ses-12/func/wrdcsub-04_ses-12_task-MTTNS_dir-pa_run-01_bold.nii.gz"
 
 mean_fmri = image.mean_img(fmri_file)
 

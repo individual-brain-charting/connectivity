@@ -15,11 +15,9 @@ from utils.plot import get_lower_tri_heatmap
 
 
 ### mean functional connectivity plots
-results_root = (
-    "/storage/store3/work/haggarwa/connectivity/results/wo_extra_GBU_runs"
-)
+results_root = "/data/parietal/store3/work/haggarwa/connectivity/results/wo_extra_GBU_runs"
 plots_root = (
-    "/storage/store3/work/haggarwa/connectivity/plots/wo_extra_GBU_runs"
+    "/data/parietal/store3/work/haggarwa/connectivity/plots/wo_extra_GBU_runs"
 )
 n_parcels = 400
 trim_length = None
@@ -39,7 +37,7 @@ os.makedirs(output_dir, exist_ok=True)
 coords_file = f"Schaefer2018_{n_parcels}Parcels_7Networks_order_FSLMNI152_2mm.Centroid_RAS.csv"
 
 atlas = datasets.fetch_atlas_schaefer_2018(
-    data_dir="/storage/store3/work/haggarwa/connectivity",
+    data_dir="/data/parietal/store3/work/haggarwa/connectivity",
     resolution_mm=2,
     n_rois=n_parcels,
 )
@@ -79,7 +77,7 @@ tasks = ["RestingState", "Raiders", "GoodBadUgly", "MonkeyKingdom", "Mario"]
 sns.set_context("notebook", font_scale=1.05)
 coords = pd.read_csv(
     os.path.join(
-        "/storage/store3/work/haggarwa/connectivity",
+        "/data/parietal/store3/work/haggarwa/connectivity",
         coords_file,
     )
 )[["R", "A", "S"]].to_numpy()

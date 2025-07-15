@@ -14,11 +14,9 @@ sns.set_context("talk")
 ### within or binary task classification accuracies ###
 hatches = [None, "X", "\\", "/", "|"] * 8
 
-results_root = (
-    "/storage/store3/work/haggarwa/connectivity/results/wo_extra_GBU_runs"
-)
+results_root = "/data/parietal/store3/work/haggarwa/connectivity/results/wo_extra_GBU_runs"
 plots_root = (
-    "/storage/store3/work/haggarwa/connectivity/plots/wo_extra_GBU_runs"
+    "/data/parietal/store3/work/haggarwa/connectivity/plots/wo_extra_GBU_runs"
 )
 n_parcels = 400
 trim_length = None

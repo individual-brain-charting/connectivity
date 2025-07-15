@@ -9,7 +9,7 @@ from sklearn.preprocessing import RobustScaler
 from matplotlib import pyplot as plt
 import seaborn as sns
 
-results = "/storage/store3/work/haggarwa/connectivity/results/"
+results = "/data/parietal/store3/work/haggarwa/connectivity/results/"
 
 # variables first set of connectomes
 n_parcels = 200
@@ -101,7 +101,7 @@ cov_estimators = [
 # connectivity measures for each cov estimator
 measures = ["correlation", "partial correlation"]
 
-plots = f"/storage/store3/work/haggarwa/connectivity/plots/umap_dataset/{datasets[0]}_{datasets[1]}"
+plots = f"/data/parietal/store3/work/haggarwa/connectivity/plots/umap_dataset/{datasets[0]}_{datasets[1]}"
 os.makedirs(plots, exist_ok=True)
 
 # loop over each cov estimator and measure

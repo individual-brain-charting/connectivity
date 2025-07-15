@@ -8,11 +8,9 @@ import matplotlib.pyplot as plt
 from utils.plot import wrap_labels
 from scipy.stats import wilcoxon, ttest_rel
 
-results_root = (
-    "/storage/store3/work/haggarwa/connectivity/results/wo_extra_GBU_runs"
-)
+results_root = "/data/parietal/store3/work/haggarwa/connectivity/results/wo_extra_GBU_runs"
 plots_root = (
-    "/storage/store3/work/haggarwa/connectivity/plots/wo_extra_GBU_runs"
+    "/data/parietal/store3/work/haggarwa/connectivity/plots/wo_extra_GBU_runs"
 )
 n_parcels = 400
 trim_length = None

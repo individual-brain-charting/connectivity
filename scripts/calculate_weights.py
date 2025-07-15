@@ -1,5 +1,5 @@
 """This script fits classifiers to full data and
- plots the classifier coefficients"""
+plots the classifier coefficients"""
 
 import os
 import pandas as pd
@@ -47,12 +47,8 @@ def fit_classifier(clas, cov, measure, func_data, output_dir):
 
 
 if __name__ == "__main__":
-    results_root = (
-        "/storage/store3/work/haggarwa/connectivity/results/wo_extra_GBU_runs"
-    )
-    weights_root = (
-        "/storage/store3/work/haggarwa/connectivity/results/wo_extra_GBU_runs"
-    )
+    results_root = "/data/parietal/store3/work/haggarwa/connectivity/results/wo_extra_GBU_runs"
+    weights_root = "/data/parietal/store3/work/haggarwa/connectivity/results/wo_extra_GBU_runs"
     n_parcels = 400
     trim_length = 293
 

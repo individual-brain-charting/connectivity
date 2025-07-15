@@ -1,5 +1,5 @@
 """This script fits classifiers to full data and
- plots the classifier coefficients"""
+plots the classifier coefficients"""
 
 import os
 import pandas as pd
@@ -24,11 +24,9 @@ sns.set_theme()
 sns.set_style("whitegrid")
 sns.set_context("talk")
 
-results_root = (
-    "/storage/store3/work/haggarwa/connectivity/results/wo_extra_GBU_runs"
-)
+results_root = "/data/parietal/store3/work/haggarwa/connectivity/results/wo_extra_GBU_runs"
 plots_root = (
-    "/storage/store3/work/haggarwa/connectivity/plots/wo_extra_GBU_runs"
+    "/data/parietal/store3/work/haggarwa/connectivity/plots/wo_extra_GBU_runs"
 )
 n_parcels = 400
 trim_length = 293
@@ -41,7 +39,7 @@ os.makedirs(output_dir, exist_ok=True)
 
 # get atlas for yeo network labels
 atlas = datasets.fetch_atlas_schaefer_2018(
-    data_dir="/storage/store3/work/haggarwa/connectivity",
+    data_dir="/data/parietal/store3/work/haggarwa/connectivity",
     resolution_mm=2,
     n_rois=n_parcels,
 )

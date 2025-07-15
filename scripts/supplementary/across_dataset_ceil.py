@@ -14,7 +14,7 @@ from sklearn.model_selection import (
     StratifiedGroupKFold,
 )
 
-results = "/storage/store3/work/haggarwa/connectivity/results/"
+results = "/data/parietal/store3/work/haggarwa/connectivity/results/"
 
 # variables first set of connectomes
 n_parcels = 200

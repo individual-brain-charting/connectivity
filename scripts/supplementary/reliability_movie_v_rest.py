@@ -21,7 +21,7 @@ from utils.connectivity import (
     get_connectomes,
 )
 
-HCP_ROOT = "/storage/store/data/HCP900"
+HCP_ROOT = "/data/parietal/store/data/HCP900"
 
 
 def _select_runs(task, run_files):
@@ -192,7 +192,7 @@ if __name__ == "__main__":
 
     #### SETUP
     # cache and root output directory
-    cache = DATA_ROOT = "/storage/store2/work/haggarwa/"
+    cache = DATA_ROOT = "/data/parietal/store2/work/haggarwa/"
     output_dir = f"reliability_{n_parcels}"
     output_dir = os.path.join(DATA_ROOT, output_dir)
     os.makedirs(output_dir, exist_ok=True)

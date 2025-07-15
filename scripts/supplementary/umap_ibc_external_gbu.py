@@ -1,6 +1,7 @@
 """This script creates 2D UMAP representations of IBC and external GBU data, to
- assess the covariate shift between the two datasets. Also tries different 
- scaling methods to reduce the covariate shift"""
+assess the covariate shift between the two datasets. Also tries different
+scaling methods to reduce the covariate shift"""
+
 import umap
 import pandas as pd
 import numpy as np
@@ -12,7 +13,7 @@ from matplotlib import pyplot as plt
 import seaborn as sns
 
 
-cache = DATA_ROOT = "/storage/store2/work/haggarwa/"
+cache = DATA_ROOT = "/data/parietal/store2/work/haggarwa/"
 # load connectomes for external GBU
 external_connectomes = pd.read_pickle(
     os.path.join(

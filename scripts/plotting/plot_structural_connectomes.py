@@ -1,8 +1,8 @@
 ### structural connectivity plots ###
 
-results_root = "/storage/store3/work/haggarwa/connectivity/results/"
+results_root = "/data/parietal/store3/work/haggarwa/connectivity/results/"
 plots_root = (
-    "/storage/store3/work/haggarwa/connectivity/plots/wo_extra_GBU_runs"
+    "/data/parietal/store3/work/haggarwa/connectivity/plots/wo_extra_GBU_runs"
 )
 n_parcels = 400
 trim_length = None

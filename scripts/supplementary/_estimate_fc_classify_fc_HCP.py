@@ -1,7 +1,7 @@
 """Pipeline to perform functional connectivity classification over runs,
  subjects and tasks for the HCP dataset
 
-Not used anywhere but kept for future use if needed. 
+Not used anywhere but kept for future use if needed.
 """
 
 import os
@@ -21,7 +21,7 @@ sns.set_theme(context="talk", style="whitegrid")
 # number of jobs to run in parallel
 n_jobs = 30
 # cache and root output directory
-cache = DATA_ROOT = "/storage/store2/work/haggarwa/"
+cache = DATA_ROOT = "/data/parietal/store2/work/haggarwa/"
 output_dir = f"fc_hcp_{time.strftime('%Y%m%d-%H%M%S')}"
 output_dir = os.path.join(DATA_ROOT, output_dir)
 os.makedirs(output_dir, exist_ok=True)

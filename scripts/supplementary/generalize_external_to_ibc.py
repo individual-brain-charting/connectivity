@@ -1,5 +1,5 @@
 """This script trains a classifier on external GBU data (from Mantini et al.
- 2012) and tests on IBC GBU"""
+2012) and tests on IBC GBU"""
 
 import pandas as pd
 import numpy as np
@@ -22,7 +22,7 @@ sys.path.append(os.path.join(os.path.dirname(__file__), ".."))
 from utils.plot import wrap_labels
 
 #### train on external test on IBC GBU ###
-cache = DATA_ROOT = "/storage/store2/work/haggarwa/"
+cache = DATA_ROOT = "/data/parietal/store2/work/haggarwa/"
 
 output_dir = os.path.join(
     DATA_ROOT,

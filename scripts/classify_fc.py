@@ -47,11 +47,9 @@ for cov in cov_estimators:
         connectivity_measures.append(cov + " " + measure)
 
 # cache and root output directory
-data_root = "/storage/store3/work/haggarwa/connectivity/data/"
+data_root = "/data/parietal/store3/work/haggarwa/connectivity/data/"
 # results directory
-results = (
-    "/storage/store3/work/haggarwa/connectivity/results/wo_extra_GBU_runs"
-)
+results = "/data/parietal/store3/work/haggarwa/connectivity/results/wo_extra_GBU_runs"
 os.makedirs(results, exist_ok=True)
 
 if within_task:

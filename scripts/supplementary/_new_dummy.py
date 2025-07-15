@@ -21,9 +21,7 @@ from matplotlib.patches import Patch
 from utils.fetching import get_ses_modality, get_confounds, get_niftis
 
 # fc results directory
-fc_results_root = (
-    "/storage/store3/work/haggarwa/connectivity/results/wo_extra_GBU_runs"
-)
+fc_results_root = "/data/parietal/store3/work/haggarwa/connectivity/results/wo_extra_GBU_runs"
 tasktype = "natural"
 
 for classification_type in ["across", "within"]:

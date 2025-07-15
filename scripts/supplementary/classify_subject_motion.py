@@ -33,12 +33,10 @@ def homogenize(data):
 
 #### INPUTS
 # plots path
-plots_path = (
-    "/storage/store3/work/haggarwa/connectivity/plots/classify_subjects_motion"
-)
+plots_path = "/data/parietal/store3/work/haggarwa/connectivity/plots/classify_subjects_motion"
 os.makedirs(plots_path, exist_ok=True)
 # results directory
-results_path = "/storage/store3/work/haggarwa/connectivity/results"
+results_path = "/data/parietal/store3/work/haggarwa/connectivity/results"
 # motion parameters
 motion_path = os.path.join(
     results_path,

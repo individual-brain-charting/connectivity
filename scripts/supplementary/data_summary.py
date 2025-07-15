@@ -10,7 +10,7 @@ from glob import glob
 # sys.path.append(os.path.join(os.path.dirname(__file__), ".."))
 from utils.fetching import get_ses_modality, get_niftis
 
-data_root = "/storage/store3/work/haggarwa/connectivity/data/"
+data_root = "/data/parietal/store3/work/haggarwa/connectivity/data/"
 
 dataset_task = {
     "ibc": [

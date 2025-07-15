@@ -2,9 +2,9 @@
 This script computes:
 1) pearson correlation
 2) correlations and partial correlations from GraphicalLassoCV estimator
-3) correlations and partial correlations GroupSparseCovarianceCV estimator 
+3) correlations and partial correlations GroupSparseCovarianceCV estimator
 
-Each representing functional connectivity from movie-watching and Resting state 
+Each representing functional connectivity from movie-watching and Resting state
 task for ROIs from Schaefer 2018 atlas
 
 See: https://nilearn.github.io/stable/connectivity/functional_connectomes.html
@@ -26,7 +26,7 @@ from ibc_public.utils_data import get_subject_session, DERIVATIVES
 import itertools
 
 # cache and output directory
-cache = OUT_ROOT = "/storage/store/work/haggarwa/"
+cache = OUT_ROOT = "/data/parietal/store/work/haggarwa/"
 
 # overwrite existing files
 OVERWRITE = False

@@ -10,8 +10,8 @@ sns.set_theme()
 sns.set_style("whitegrid")
 sns.set_context("talk")
 
-results = "/storage/store3/work/haggarwa/connectivity/results/across_dataset_generalize"
-plots = "/storage/store3/work/haggarwa/connectivity/plots/"
+results = "/data/parietal/store3/work/haggarwa/connectivity/results/across_dataset_generalize"
+plots = "/data/parietal/store3/work/haggarwa/connectivity/plots/"
 output = os.path.join(plots, "across_dataset_generalize")
 os.makedirs(output, exist_ok=True)
 

@@ -60,7 +60,7 @@ task_dataset = task_to_dataset(dataset_task)
 
 
 # Load the data
-results = "/storage/store3/work/haggarwa/connectivity/results/"
+results = "/data/parietal/store3/work/haggarwa/connectivity/results/"
 # find all pickle files with connectomes
 connectome_files = glob(os.path.join(results, "connectomes*.pkl"))
 

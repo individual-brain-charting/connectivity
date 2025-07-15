@@ -8,11 +8,9 @@ n_parcels = 200
 trim_length = 293
 tasktype = "natural"
 
-plots_root = f"/storage/store3/work/haggarwa/connectivity/plots/wo_extra_GBU_runs/meanscores_nparcels-{n_parcels}_trim-{trim_length}"
+plots_root = f"/data/parietal/store3/work/haggarwa/connectivity/plots/wo_extra_GBU_runs/meanscores_nparcels-{n_parcels}_trim-{trim_length}"
 
-results_root = (
-    "/storage/store3/work/haggarwa/connectivity/results/wo_extra_GBU_runs"
-)
+results_root = "/data/parietal/store3/work/haggarwa/connectivity/results/wo_extra_GBU_runs"
 
 within_dir = f"classification-within_tasktype-{tasktype}_nparcels-{n_parcels}_trim-{trim_length}"
 within_pkl = os.path.join(results_root, within_dir, "all_results.pkl")

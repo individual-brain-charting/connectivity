@@ -21,14 +21,12 @@ from matplotlib.patches import Patch
 from utils.fetching import get_ses_modality, get_confounds, get_niftis
 
 # motion results directory
-motion_results_path = "/storage/store3/work/haggarwa/connectivity/results/classify_subjects_motion.pkl"
+motion_results_path = "/data/parietal/store3/work/haggarwa/connectivity/results/classify_subjects_motion.pkl"
 motion_results = pd.read_pickle(motion_results_path)
 motion_results[motion_results.select_dtypes(include=["number"]).columns] *= 100
 
 # fc results directory
-fc_results_root = (
-    "/storage/store3/work/haggarwa/connectivity/results/wo_extra_GBU_runs"
-)
+fc_results_root = "/data/parietal/store3/work/haggarwa/connectivity/results/wo_extra_GBU_runs"
 n_parcels = 400
 trim_length = None
 tasktype = "natural"
@@ -61,9 +59,7 @@ motion_results["feature"] = "Frame-wise displacement"
 results = pd.concat([fc_results, motion_results], ignore_index=True)
 
 # plots path
-plots_path = (
-    "/storage/store3/work/haggarwa/connectivity/plots/classify_subjects_motion"
-)
+plots_path = "/data/parietal/store3/work/haggarwa/connectivity/plots/classify_subjects_motion"
 os.makedirs(plots_path, exist_ok=True)
 
 # tasks to classify

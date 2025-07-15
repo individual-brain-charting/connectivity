@@ -11,11 +11,9 @@ from nilearn import datasets
 import matplotlib.pyplot as plt
 from matplotlib import cm
 
-results_root = (
-    "/storage/store3/work/haggarwa/connectivity/results/wo_extra_GBU_runs"
-)
+results_root = "/data/parietal/store3/work/haggarwa/connectivity/results/wo_extra_GBU_runs"
 plots_root = (
-    "/storage/store3/work/haggarwa/connectivity/plots/wo_extra_GBU_runs"
+    "/data/parietal/store3/work/haggarwa/connectivity/plots/wo_extra_GBU_runs"
 )
 n_parcels = 400
 trim_length = None
@@ -32,7 +30,7 @@ classify = ["Tasks", "Subjects", "Runs"]
 
 # get atlas for yeo network labels
 atlas = datasets.fetch_atlas_schaefer_2018(
-    data_dir="/storage/store3/work/haggarwa/connectivity",
+    data_dir="/data/parietal/store3/work/haggarwa/connectivity",
     resolution_mm=2,
     n_rois=n_parcels,
 )

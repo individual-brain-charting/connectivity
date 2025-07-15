@@ -8,7 +8,7 @@ sys.path.append(os.path.join(os.path.dirname(__file__), ".."))
 from utils.fc_estimation import get_ses_modality
 
 ### create sc_data dataframe for native space
-cache = DATA_ROOT = "/storage/store2/work/haggarwa/"
+cache = DATA_ROOT = "/data/parietal/store2/work/haggarwa/"
 n_parcels = 200
 sub_ses, _ = get_ses_modality("DWI")
 sc_data_native = []

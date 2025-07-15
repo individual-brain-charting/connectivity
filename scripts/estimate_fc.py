@@ -28,9 +28,9 @@ trim_length = 128 if tasktype == "domain" else 293
 # trim_length = None
 
 # cache and root output directory
-data_root = "/storage/store3/work/haggarwa/connectivity/data/"
+data_root = "/data/parietal/store3/work/haggarwa/connectivity/data/"
 # results directory
-results = "/storage/store3/work/haggarwa/connectivity/results"
+results = "/data/parietal/store3/work/haggarwa/connectivity/results"
 os.makedirs(results, exist_ok=True)
 # number of jobs to run in parallel
 n_jobs = 10

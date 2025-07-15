@@ -1,5 +1,5 @@
 """This script calculates the similarity between functional connectivity
- matrices from different tasks and structural connectivity"""
+matrices from different tasks and structural connectivity"""
 
 import os
 import time
@@ -15,10 +15,8 @@ from utils.similarity import (
 )
 
 
-fc_root = (
-    "/storage/store3/work/haggarwa/connectivity/results/wo_extra_GBU_runs"
-)
-sc_root = "/storage/store3/work/haggarwa/connectivity/results"
+fc_root = "/data/parietal/store3/work/haggarwa/connectivity/results/wo_extra_GBU_runs"
+sc_root = "/data/parietal/store3/work/haggarwa/connectivity/results"
 n_parcels = 400
 trim_length = None
 

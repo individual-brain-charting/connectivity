@@ -17,8 +17,8 @@ sns.set_context("talk")
 
 ### transfer IBC -> external connectivity matrices ###
 # get atlas for yeo network labels
-cache = "/storage/store2/work/haggarwa/"
-DATA_ROOT = "/storage/store2/work/haggarwa/"
+cache = "/data/parietal/store2/work/haggarwa/"
+DATA_ROOT = "/data/parietal/store2/work/haggarwa/"
 IBC_ROOT = os.path.join(
     DATA_ROOT, "ibc_sync_external_connectivity_20231206-110710"
 )
