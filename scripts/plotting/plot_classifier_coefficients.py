@@ -31,17 +31,13 @@ plots_root = (
     "/storage/store3/work/haggarwa/connectivity/plots/wo_extra_GBU_runs"
 )
 n_parcels = 400
-trim_length = None
+trim_length = 293
 
 dir_name = f"weights_nparcels-{n_parcels}_trim-{trim_length}"
 weight_dir = os.path.join(results_root, dir_name)
 
 output_dir = os.path.join(plots_root, dir_name)
 os.makedirs(output_dir, exist_ok=True)
-
-cov_estimators = ["Graphical-Lasso", "Ledoit-Wolf", "Unregularized"]
-measures = ["correlation", "partial correlation"]
-classify = ["Tasks", "Subjects", "Runs"]
 
 # get atlas for yeo network labels
 atlas = datasets.fetch_atlas_schaefer_2018(
@@ -54,7 +50,7 @@ cov_estimators = ["Graphical-Lasso", "Ledoit-Wolf", "Unregularized"]
 # connectivity measures for each cov estimator
 measures = ["correlation", "partial correlation"]
 # what to classify
-classify = ["Tasks", "Subjects", "Runs"]
+classify = ["Tasks", "Subjects"]
 
 x = Parallel(n_jobs=20, verbose=11)(
     delayed(plot_full_weight_matrix)(

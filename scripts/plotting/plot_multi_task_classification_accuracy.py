@@ -17,8 +17,8 @@ results_root = (
 plots_root = (
     "/storage/store3/work/haggarwa/connectivity/plots/wo_extra_GBU_runs"
 )
-n_parcels = 200
-trim_length = 293
+n_parcels = 400
+trim_length = None
 tasktype = "natural"
 do_hatch = False
 

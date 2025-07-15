@@ -54,7 +54,7 @@ if __name__ == "__main__":
         "/storage/store3/work/haggarwa/connectivity/results/wo_extra_GBU_runs"
     )
     n_parcels = 400
-    trim_length = None
+    trim_length = 293
 
     connectome_pkl = f"connectomes_nparcels-{n_parcels}_tasktype-natural_trim-{trim_length}.pkl"
     connectome_pkl = os.path.join(results_root, connectome_pkl)
@@ -68,8 +68,8 @@ if __name__ == "__main__":
 
     cov_estimators = ["Graphical-Lasso", "Ledoit-Wolf", "Unregularized"]
     measures = ["correlation", "partial correlation"]
-    # classify = ["Tasks", "Subjects", "Runs"]
-    classify = ["Tasks"]
+    classify = ["Tasks", "Subjects", "Runs"]
+    # classify = ["Tasks"]
     x = Parallel(n_jobs=20, verbose=11)(
         delayed(fit_classifier)(clas, cov, measure, df, output_dir=output_dir)
         for clas, cov, measure in get_clas_cov_measure(

@@ -27,7 +27,8 @@ def drop_nan_samples(X, y, groups, task_label, connectivity_measure, classify):
         )
     X = np.delete(X, nan_indices, axis=0)
     y = np.delete(y, nan_indices, axis=0)
-    groups = np.delete(groups, nan_indices, axis=0)
+    if groups is not None:
+        groups = np.delete(groups, nan_indices, axis=0)
 
     return X, y, groups
 
