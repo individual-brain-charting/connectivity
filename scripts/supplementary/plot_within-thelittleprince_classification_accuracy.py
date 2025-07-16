@@ -38,7 +38,6 @@ measures = ["correlation", "partial correlation"]
 classify = ["Subjects", "Runs"]
 # tasks
 tasks = ["LePetitPrince"]
-movies = tasks[1:4] + [tasks[-1]]
 
 df[df.select_dtypes(include=["number"]).columns] *= 100
 
@@ -46,11 +45,10 @@ for score in ["balanced_accuracy", "f1_macro"]:
     for clas in classify:
         df_ = df[df["classes"] == clas]
         df_.reset_index(inplace=True, drop=True)
-        if clas == "Runs":
-            print(len(df_))
-            print(df_["task_label"].unique())
-            df_ = df_[df_["task_label"].isin(movies)]
-            print(len(df_))
+        # rename LePetitPrince to TheLittlePrince
+        df_["task_label"] = df_["task_label"].replace(
+            "LePetitPrince", "TheLittlePrince"
+        )
         for how_many in ["all", "three"]:
             if how_many == "all":
                 order = [
@@ -67,75 +65,22 @@ for score in ["balanced_accuracy", "f1_macro"]:
                     "Ledoit-Wolf correlation",
                     "Graphical-Lasso partial correlation",
                 ]
-            if clas == "Tasks":
-                legend_cutoff = 15
-                palette_init = 1
+            if clas == "Runs":
+                legend_cutoff = 1
                 title = ""
-                rest_colors = ["#1f77b499"] + sns.color_palette("tab20c")[0:4]
-                movie_colors = sns.color_palette("tab20c")[4:7]
-                mario_colors = sns.color_palette("tab20c")[8:12]
-                lpp_colors = sns.color_palette("tab20c")[12:15]
-                color_palette = (
-                    rest_colors + lpp_colors + movie_colors + mario_colors
-                )
-                bar_label_color = "white"
-                bar_label_weight = "bold"
-                hue_order = [
-                    "RestingState vs LePetitPrince",
-                    "RestingState vs Raiders",
-                    "RestingState vs GoodBadUgly",
-                    "RestingState vs MonkeyKingdom",
-                    "RestingState vs Mario",
-                    "LePetitPrince vs Raiders",
-                    "LePetitPrince vs GoodBadUgly",
-                    "LePetitPrince vs MonkeyKingdom",
-                    "Raiders vs GoodBadUgly",
-                    "Raiders vs MonkeyKingdom",
-                    "GoodBadUgly vs MonkeyKingdom",
-                    "LePetitPrince vs Mario",
-                    "Raiders vs Mario",
-                    "GoodBadUgly vs Mario",
-                    "MonkeyKingdom vs Mario",
-                ]
-            elif clas == "Runs":
-                legend_cutoff = 4
-                palette_init = 1
-                title = ""
-                movie_colors = sns.color_palette("tab20c")[4:7]
                 lpp_colors = sns.color_palette("tab20c")[12]
-                color_palette = [lpp_colors] + movie_colors
+                color_palette = [lpp_colors]
                 bar_label_color = "white"
                 bar_label_weight = "bold"
-                hue_order = [
-                    "LePetitPrince",
-                    "Raiders",
-                    "GoodBadUgly",
-                    "MonkeyKingdom",
-                ]
+                hue_order = ["TheLittlePrince"]
             else:
-                legend_cutoff = 6
-                palette_init = 0
+                legend_cutoff = 1
                 title = ""
-                rest_colors = sns.color_palette("tab20c")[0]
-                movie_colors = sns.color_palette("tab20c")[4:7]
-                mario_colors = sns.color_palette("tab20c")[8]
                 lpp_colors = sns.color_palette("tab20c")[12]
-                color_palette = (
-                    [rest_colors]
-                    + [lpp_colors]
-                    + movie_colors
-                    + [mario_colors]
-                )
+                color_palette = [lpp_colors]
                 bar_label_color = "white"
                 bar_label_weight = "bold"
-                hue_order = hue_order = [
-                    "RestingState",
-                    "LePetitPrince",
-                    "Raiders",
-                    "GoodBadUgly",
-                    "MonkeyKingdom",
-                    "Mario",
-                ]
+                hue_order = ["TheLittlePrince"]
             ax_score = sns.barplot(
                 y="connectivity",
                 x=score,
@@ -197,10 +142,9 @@ for score in ["balanced_accuracy", "f1_macro"]:
                 if i == legend_cutoff:
                     text.set_text("Chance-level")
 
-            legend.set_title("Task")
             fig = plt.gcf()
-            if clas == "Tasks":
-                fig.set_size_inches(6, 15)
+            if how_many == "three":
+                fig.set_size_inches(6, 3)
             else:
                 fig.set_size_inches(6, 6)
 
