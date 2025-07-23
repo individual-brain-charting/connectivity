@@ -6,17 +6,19 @@ import matplotlib.pyplot as plt
 import matplotlib as mpl
 
 # add utils to path
-# sys.path.append(os.path.join(os.path.dirname(__file__), ".."))
-from utils.plot import insert_stats, wrap_labels
+sys.path.append(os.path.join(os.path.dirname(__file__), "..", ".."))
+from utils.plot import insert_stats_horizontal, wrap_labels
 
 sns.set_theme()
 sns.set_style("whitegrid")
 sns.set_context("talk")
 
-results_root = "/data/parietal/store3/work/haggarwa/connectivity/results/wo_extra_GBU_runs"
-plots_root = (
-    "/data/parietal/store3/work/haggarwa/connectivity/plots/wo_extra_GBU_runs/"
-)
+# root = "/data/parietal/store3/work/haggarwa/connectivity"
+root = "/Users/himanshu/Desktop/ibc/connectivity"
+results_root = os.path.join(root, "results", "wo_extra_GBU_runs")
+plots_root = os.path.join(root, "plots", "wo_extra_GBU_runs")
+
+
 n_parcels = 400
 trim_length = None
 do_hatch = False
