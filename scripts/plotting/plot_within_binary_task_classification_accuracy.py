@@ -2,9 +2,10 @@ import os
 import pandas as pd
 import seaborn as sns
 import matplotlib.pyplot as plt
+import sys
 
 # add utils to path
-# sys.path.append(os.path.join(os.path.dirname(__file__), ".."))
+sys.path.append(os.path.join(os.path.dirname(__file__), "..", ".."))
 from utils.plot import wrap_labels
 
 sns.set_theme()
@@ -14,10 +15,11 @@ sns.set_context("talk")
 ### within or binary task classification accuracies ###
 hatches = [None, "X", "\\", "/", "|"] * 8
 
-results_root = "/data/parietal/store3/work/haggarwa/connectivity/results/wo_extra_GBU_runs"
-plots_root = (
-    "/data/parietal/store3/work/haggarwa/connectivity/plots/wo_extra_GBU_runs"
-)
+# root = "/data/parietal/store3/work/haggarwa/connectivity"
+root = "/Users/himanshu/Desktop/ibc/connectivity"
+results_root = os.path.join(root, "results", "wo_extra_GBU_runs")
+plots_root = os.path.join(root, "plots", "wo_extra_GBU_runs")
+
 n_parcels = 400
 trim_length = None
 tasktype = "natural"
