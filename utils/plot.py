@@ -273,6 +273,125 @@ def plot_full_weight_matrix(
     )
 
 
+def insert_stats_horizontal(
+    ax, p_val, data, y_positions, x_offset_level=0, bar_height=0.8
+):
+    """
+    Insert p-values from statistical tests into horizontal barplots.
+    Creates a separate axis for statistical annotations to avoid affecting the main plot.
+
+    Parameters:
+    -----------
+    ax : matplotlib axis
+        The main axis with the barplot
+    p_val : float
+        The p-value from statistical test
+    data : array-like
+        Data values (not used in this version)
+    y_positions : list
+        [y1, y2] positions of the bars being compared
+    x_offset_level : int
+        Level of offset to avoid overlapping lines (0, 1, 2, ...)
+    bar_height : float
+        Height of bars (for proper spacing)
+    """
+    # Create a separate axis for statistical annotations only if it doesn't exist
+    fig = ax.get_figure()
+
+    # Check if stats axis already exists
+    stats_ax = None
+    for axis in fig.axes:
+        if hasattr(axis, "_is_stats_axis"):
+            stats_ax = axis
+            break
+
+    if stats_ax is None:
+        # Get the position of the main axis
+        main_pos = ax.get_position()
+
+        # Adjust main axis to make room for stats axis
+        new_main_width = main_pos.width * 0.10  # Reduce main axis width by 75%
+        ax.set_position(
+            [main_pos.x0, main_pos.y0, new_main_width, main_pos.height]
+        )
+
+        # Create an even wider axis on the right for statistics
+        stats_width = 0.35  # Much larger width of the statistics axis
+        gap = 0.79  # Larger gap between axes for clear separation
+        stats_ax = fig.add_axes(
+            [
+                main_pos.x0
+                + new_main_width
+                + gap,  # Start after main axis + gap
+                main_pos.y0 + 0.02,  # Same bottom position
+                stats_width,  # Width for statistics
+                main_pos.height - 0.03,  # Same height
+            ]
+        )
+
+        # Mark this as a stats axis
+        stats_ax._is_stats_axis = True
+
+        # Set the same y-limits as the main axis
+        stats_ax.set_ylim(ax.get_ylim())
+
+        # Set an even wider x range for the statistics to accommodate all lines
+        stats_ax.set_xlim(0, 35)  # Even larger range
+
+        # Remove ticks and labels from the stats axis
+        stats_ax.set_xticks([])
+        stats_ax.set_yticks([])
+        stats_ax.spines["top"].set_visible(False)
+        stats_ax.spines["right"].set_visible(False)
+        stats_ax.spines["bottom"].set_visible(False)
+        stats_ax.spines["left"].set_visible(False)
+
+    y1, y2 = y_positions[0], y_positions[1]
+
+    # Draw lines in the statistics axis with better spacing
+    line_x = 1 + (x_offset_level * 2.2)  # More spacing between levels
+    line_length = 0.5  # Shortened from 1.5 to 0.8
+
+    # Horizontal lines at each bar level (shorter lines)
+    stats_ax.plot([line_x, line_x + line_length], [y1, y1], lw=1.5, c="0.25")
+    stats_ax.plot([line_x, line_x + line_length], [y2, y2], lw=1.5, c="0.25")
+    # Vertical connecting line
+    stats_ax.plot(
+        [line_x + line_length, line_x + line_length],
+        [y1, y2],
+        lw=1.5,
+        c="0.25",
+    )
+
+    # Determine significance text
+    if p_val < 0.0001:
+        text = "****"
+    elif p_val < 0.001:
+        text = "***"
+    elif p_val < 0.01:
+        text = "**"
+    elif p_val < 0.05:
+        text = "*"
+    else:
+        text = "ns"
+
+    # Position text at the middle of the line, with some spacing to the right
+    text_x = line_x + line_length + 0.2  # Increased spacing from 0.4 to 0.8
+    text_y = (y1 + y2) / 2
+
+    stats_ax.text(
+        text_x,
+        text_y,
+        f"{text}",
+        ha="center",
+        va="center",
+        color="0.25",
+        fontsize=11,
+        weight="bold",
+        rotation=270,  # Rotate 90 degrees to be parallel with vertical comparison lines
+    )
+
+
 def insert_stats(ax, p_val, data, loc=[], h=0.15, y_offset=0, x_n=3):
     """
     Insert p-values from statistical tests into boxplots.
