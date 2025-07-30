@@ -17,7 +17,7 @@ from matplotlib.patches import Patch
 
 
 # add utils to path
-# sys.path.append(os.path.join(os.path.dirname(__file__), ".."))
+sys.path.append(os.path.join(os.path.dirname(__file__), "..", ".."))
 from utils.fetching import get_ses_modality, get_confounds, get_niftis
 
 

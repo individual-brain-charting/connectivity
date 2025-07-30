@@ -33,14 +33,16 @@ def homogenize(data):
 
 #### INPUTS
 # plots path
-plots_path = "/data/parietal/store3/work/haggarwa/connectivity/plots/classify_run_motion"
+plots_path = (
+    "/data/parietal/store3/work/haggarwa/connectivity/plots/classify_run_fd"
+)
 os.makedirs(plots_path, exist_ok=True)
 # results directory
 results_path = "/data/parietal/store3/work/haggarwa/connectivity/results"
 # motion parameters
 motion_path = os.path.join(
     results_path,
-    f"motion_parameters.pkl",
+    f"framewise_displacement.pkl",
 )
 motion_data = pd.read_pickle(motion_path)
 motion_data = motion_data[motion_data["dataset"] == "ibc"]
@@ -60,7 +62,7 @@ results = []
 # output data paths
 output_path = os.path.join(
     results_path,
-    f"classify_runs_motion.pkl",
+    f"classify_runs_fd.pkl",
 )
 for task in tqdm(tasks):
     print(f"Task: {task}")

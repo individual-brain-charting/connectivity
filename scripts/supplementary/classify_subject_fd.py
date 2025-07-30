@@ -33,14 +33,14 @@ def homogenize(data):
 
 #### INPUTS
 # plots path
-plots_path = "/data/parietal/store3/work/haggarwa/connectivity/plots/classify_run_motion"
+plots_path = "/data/parietal/store3/work/haggarwa/connectivity/plots/classify_subjects_fd"
 os.makedirs(plots_path, exist_ok=True)
 # results directory
 results_path = "/data/parietal/store3/work/haggarwa/connectivity/results"
 # motion parameters
 motion_path = os.path.join(
     results_path,
-    f"motion_parameters.pkl",
+    f"framewise_displacement.pkl",
 )
 motion_data = pd.read_pickle(motion_path)
 motion_data = motion_data[motion_data["dataset"] == "ibc"]
@@ -48,19 +48,21 @@ motion_data = motion_data[motion_data["dataset"] == "ibc"]
 n_jobs = 10
 # tasks to classify
 tasks = [
+    "RestingState",
     "LePetitPrince",
     "Raiders",
     "GoodBadUgly",
     "MonkeyKingdom",
+    "Mario",
 ]
 
 results = []
 
-# classify runs
+# classify subjects
 # output data paths
 output_path = os.path.join(
     results_path,
-    f"classify_runs_motion.pkl",
+    f"classify_subjects_fd.pkl",
 )
 for task in tqdm(tasks):
     print(f"Task: {task}")
@@ -68,8 +70,8 @@ for task in tqdm(tasks):
 
     # get X, y and groups
     X = motion_data_task["motion"].tolist()
-    y = np.array(motion_data_task["run_labels"].tolist())
-    groups = np.array(motion_data_task["subject_ids"].tolist())
+    y = np.array(motion_data_task["subject_ids"].tolist())
+    groups = np.array(motion_data_task["run_labels"].tolist())
 
     print("Runs before homogenization:", len(X))
     # homogenize X, y and groups
@@ -99,13 +101,7 @@ for task in tqdm(tasks):
         y,
         groups=groups,
         cv=cv_scheme,
-        scoring=[
-            "accuracy",
-            "balanced_accuracy",
-            "f1_macro",
-            "f1_weighted",
-            "f1_micro",
-        ],
+        scoring=["accuracy", "balanced_accuracy", "f1_macro"],
         n_jobs=n_jobs,
         return_estimator=True,
         return_indices=True,
@@ -116,13 +112,7 @@ for task in tqdm(tasks):
         y,
         groups=groups,
         cv=cv_scheme,
-        scoring=[
-            "accuracy",
-            "balanced_accuracy",
-            "f1_macro",
-            "f1_weighted",
-            "f1_micro",
-        ],
+        scoring=["accuracy", "balanced_accuracy", "f1_macro"],
         n_jobs=n_jobs,
         return_estimator=True,
         return_indices=True,
@@ -132,15 +122,11 @@ for task in tqdm(tasks):
         "accuracy": cv_result["test_accuracy"].tolist(),
         "balanced_accuracy": cv_result["test_balanced_accuracy"].tolist(),
         "f1_macro": cv_result["test_f1_macro"].tolist(),
-        "f1_weighted": cv_result["test_f1_weighted"].tolist(),
-        "f1_micro": cv_result["test_f1_micro"].tolist(),
         "dummy_accuracy": cv_result_dummy["test_accuracy"].tolist(),
         "dummy_balanced_accuracy": cv_result_dummy[
             "test_balanced_accuracy"
         ].tolist(),
         "dummy_f1_macro": cv_result_dummy["test_f1_macro"].tolist(),
-        "dummy_f1_weighted": cv_result_dummy["test_f1_weighted"].tolist(),
-        "dummy_f1_micro": cv_result_dummy["test_f1_micro"].tolist(),
         "train_indices": list(cv_result["indices"]["train"]),
         "test_indices": list(cv_result["indices"]["test"]),
     }

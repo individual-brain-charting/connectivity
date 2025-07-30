@@ -78,7 +78,7 @@ dataset_task = {
 # output data paths
 output_path = os.path.join(
     results,
-    f"motion_parameters.pkl",
+    f"framewise_displacement.pkl",
 )
 
 data = {
