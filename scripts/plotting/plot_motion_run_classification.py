@@ -17,16 +17,19 @@ from matplotlib.patches import Patch
 
 
 # add utils to path
-# sys.path.append(os.path.join(os.path.dirname(__file__), ".."))
+sys.path.append(os.path.join(os.path.dirname(__file__), "..", ".."))
 from utils.fetching import get_ses_modality, get_confounds, get_niftis
 
 # motion results directory
-motion_results_path = "/data/parietal/store3/work/haggarwa/connectivity/results/classify_runs_motion.pkl"
+# root = "/data/parietal/store3/work/haggarwa/connectivity"
+root = "/Users/himanshu/Desktop/ibc/connectivity"
+
+motion_results_path = os.path.join(root, "results/classify_runs_motion.pkl")
 motion_results = pd.read_pickle(motion_results_path)
 motion_results[motion_results.select_dtypes(include=["number"]).columns] *= 100
 
 # fc results directory
-fc_results_root = "/data/parietal/store3/work/haggarwa/connectivity/results/wo_extra_GBU_runs"
+fc_results_root = os.path.join(root, "results/wo_extra_GBU_runs")
 n_parcels = 400
 trim_length = None
 tasktype = "natural"
@@ -55,11 +58,11 @@ motion_results = motion_results.rename(
 )
 fc_results = fc_results[list(motion_results.columns)]
 fc_results["feature"] = "Unregularized correlation FC"
-motion_results["feature"] = "Frame-wise displacement"
+motion_results["feature"] = "Motion parameters"
 results = pd.concat([fc_results, motion_results], ignore_index=True)
 
 # plots path
-plots_path = "/data/parietal/store3/work/haggarwa/connectivity/plots/classify_runs_motion"
+plots_path = os.path.join(root, "plots/classify_runs_motion")
 os.makedirs(plots_path, exist_ok=True)
 
 # tasks to classify
@@ -85,7 +88,7 @@ for score in ["balanced_accuracy", "f1_macro"]:
         palette="Set1",
         order=tasks,
         hue="feature",
-        hue_order=["Frame-wise displacement", "Unregularized correlation FC"],
+        hue_order=["Motion parameters", "Unregularized correlation FC"],
     )
     # add accuracy labels on bars
     for i, container in enumerate(ax_score.containers):
@@ -95,7 +98,7 @@ for score in ["balanced_accuracy", "f1_macro"]:
             padding = -35
         else:
             bar_label_color = "black"
-            padding = 45
+            padding = 55
         plt.bar_label(
             container,
             fmt="%.1f",
@@ -113,7 +116,7 @@ for score in ["balanced_accuracy", "f1_macro"]:
         order=tasks,
         facecolor=(0.8, 0.8, 0.8, 1),
         hue="feature",
-        hue_order=["Frame-wise displacement", "Unregularized correlation FC"],
+        hue_order=["Motion parameters", "Unregularized correlation FC"],
     )
     if score == "balanced_accuracy":
         plt.xlabel("Accuracy")

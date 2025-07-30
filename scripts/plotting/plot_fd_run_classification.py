@@ -24,9 +24,7 @@ from utils.fetching import get_ses_modality, get_confounds, get_niftis
 # root = "/data/parietal/store3/work/haggarwa/connectivity"
 root = "/Users/himanshu/Desktop/ibc/connectivity"
 
-motion_results_path = os.path.join(
-    root, "results/classify_subjects_motion.pkl"
-)
+motion_results_path = os.path.join(root, "results/classify_runs_fd.pkl")
 motion_results = pd.read_pickle(motion_results_path)
 motion_results[motion_results.select_dtypes(include=["number"]).columns] *= 100
 
@@ -39,7 +37,7 @@ dir_name = f"classification-within_tasktype-{tasktype}_nparcels-{n_parcels}_trim
 fc_results_path = os.path.join(fc_results_root, dir_name, "all_results.pkl")
 fc_results = pd.read_pickle(fc_results_path)
 fc_results[fc_results.select_dtypes(include=["number"]).columns] *= 100
-fc_results = fc_results[fc_results["classes"] == "Subjects"]
+fc_results = fc_results[fc_results["classes"] == "Runs"]
 fc_results = fc_results[
     fc_results["connectivity"] == "Unregularized correlation"
 ]
@@ -60,21 +58,19 @@ motion_results = motion_results.rename(
 )
 fc_results = fc_results[list(motion_results.columns)]
 fc_results["feature"] = "Unregularized correlation FC"
-motion_results["feature"] = "Motion parameters"
+motion_results["feature"] = "Frame-wise displacement"
 results = pd.concat([fc_results, motion_results], ignore_index=True)
 
 # plots path
-plots_path = os.path.join(root, "plots/classify_subjects_motion")
+plots_path = os.path.join(root, "plots/classify_runs_fd")
 os.makedirs(plots_path, exist_ok=True)
 
 # tasks to classify
 tasks = [
-    "RestingState",
     "LePetitPrince",
     "Raiders",
     "GoodBadUgly",
     "MonkeyKingdom",
-    "Mario",
 ]
 
 # plot
@@ -83,6 +79,7 @@ sns.set_style("whitegrid")
 sns.set_context("talk")
 
 for score in ["balanced_accuracy", "f1_macro"]:
+    fig, ax = plt.subplots(figsize=(5, 3))
     ax_score = sns.barplot(
         y="task",
         x=score,
@@ -91,17 +88,17 @@ for score in ["balanced_accuracy", "f1_macro"]:
         palette="Set1",
         order=tasks,
         hue="feature",
-        hue_order=["Motion parameters", "Unregularized correlation FC"],
+        hue_order=["Frame-wise displacement", "Unregularized correlation FC"],
     )
     # add accuracy labels on bars
     for i, container in enumerate(ax_score.containers):
         bar_label_weight = "bold"
         if i == 1:
             bar_label_color = "white"
-            padding = -45
+            padding = -35
         else:
             bar_label_color = "black"
-            padding = 30
+            padding = 45
         plt.bar_label(
             container,
             fmt="%.1f",
@@ -119,7 +116,7 @@ for score in ["balanced_accuracy", "f1_macro"]:
         order=tasks,
         facecolor=(0.8, 0.8, 0.8, 1),
         hue="feature",
-        hue_order=["Motion parameters", "Unregularized correlation FC"],
+        hue_order=["Frame-wise displacement", "Unregularized correlation FC"],
     )
     if score == "balanced_accuracy":
         plt.xlabel("Accuracy")
@@ -144,7 +141,7 @@ for score in ["balanced_accuracy", "f1_macro"]:
             text.set_text("Chance-level")
             handle.set_color((0.8, 0.8, 0.8, 1))
 
-    plot_file = "classify_subjects_motion"
+    plot_file = "classify_runs_fd"
     plt.savefig(
         os.path.join(plots_path, f"{plot_file}_{score}.png"),
         bbox_inches="tight",
