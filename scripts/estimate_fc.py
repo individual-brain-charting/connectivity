@@ -95,11 +95,11 @@ dataset_task = {
 # output data paths
 timeseries_path = os.path.join(
     results,
-    f"timeseries_nparcels-{n_parcels}_tasktype-{tasktype}_lowpass-0-1.pkl",
+    f"timeseries_nparcels-{n_parcels}_tasktype-{tasktype}_lowpass-{low_pass}.pkl",
 )
 fc_data_path = os.path.join(
     results,
-    f"connectomes_nparcels-{n_parcels}_tasktype-{tasktype}_trim-{trim_length}_lowpass-0-1.pkl",
+    f"connectomes_nparcels-{n_parcels}_tasktype-{tasktype}_trim-{trim_length}_lowpass-{low_pass}.pkl",
 )
 
 
