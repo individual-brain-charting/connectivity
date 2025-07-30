@@ -14,6 +14,12 @@ from utils.fc_estimation import (
     get_time_series,
 )
 
+# read arguments
+if len(sys.argv) > 1:
+    low_pass = float(sys.argv[1])
+else:
+    low_pass = 0.2
+
 #### INPUTS
 # kind of tasks to keep
 #  - "natural" for naturalistic tasks
@@ -152,6 +158,7 @@ else:
             atlas=atlas,
             data_root_path=dataset_root_path,
             dataset=dataset,
+            low_pass=low_pass,
         )
         for dataset, task, dataset_root_path in generator_dataset_task(
             dataset_task, tasktype

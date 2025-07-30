@@ -36,7 +36,7 @@ def _trim_timeseries(timeseries, n):
     return timeseries[:n, :]
 
 
-def get_time_series(task, atlas, data_root_path, dataset="ibc"):
+def get_time_series(task, atlas, data_root_path, low_pass, dataset="ibc"):
     """Use NiftiLabelsMasker to extract time series from nifti files.
 
     Parameters
@@ -68,7 +68,7 @@ def get_time_series(task, atlas, data_root_path, dataset="ibc"):
     masker = NiftiLabelsMasker(
         labels_img=atlas.maps,
         standardize="zscore_sample",
-        low_pass=0.1,
+        low_pass=low_pass,
         high_pass=0.01,
         t_r=repetition_time,
         verbose=0,
