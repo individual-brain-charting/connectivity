@@ -18,14 +18,14 @@ from utils.fc_estimation import (
 # kind of tasks to keep
 #  - "natural" for naturalistic tasks
 #  - "domain" for cognitive-domain-specific tasks
-tasktype = "domain"
+tasktype = "natural"
 # trim the time series to the given length, None to keep all
 # keeping 293 time points for natural tasks
 # 128 for domain tasks
-trim_length = 128 if tasktype == "domain" else 293
+# trim_length = 128 if tasktype == "domain" else 293
 
 # also try no trimming
-# trim_length = None
+trim_length = None
 
 # cache and root output directory
 data_root = "/data/parietal/store3/work/haggarwa/connectivity/data/"
@@ -37,7 +37,11 @@ n_jobs = 10
 # number of parcels: 400 or 200
 n_parcels = 400
 # cov estimators
-cov_estimators = ["Graphical-Lasso", "Ledoit-Wolf", "Unregularized"]
+cov_estimators = [
+    # "Graphical-Lasso",
+    # "Ledoit-Wolf",
+    "Unregularized",
+]
 # datasets and tasks to extract time series from
 dataset_task = {
     "ibc": [
@@ -48,36 +52,36 @@ dataset_task = {
         "RestingState",
         "Mario",
         "LePetitPrince",
-        # Archi
-        "ArchiStandard",
-        "ArchiSpatial",
-        "ArchiSocial",
-        "ArchiEmotional",
-        # HCP
-        "HcpEmotion",
-        "HcpGambling",
-        "HcpLanguage",
-        "HcpMotor",
-        "HcpRelational",
-        "HcpSocial",
-        "HcpWm",
+        # # Archi
+        # "ArchiStandard",
+        # "ArchiSpatial",
+        # "ArchiSocial",
+        # "ArchiEmotional",
+        # # HCP
+        # "HcpEmotion",
+        # "HcpGambling",
+        # "HcpLanguage",
+        # "HcpMotor",
+        # "HcpRelational",
+        # "HcpSocial",
+        # "HcpWm",
     ],
-    "HCP900": [
-        "EMOTION",
-        "GAMBLING",
-        "LANGUAGE",
-        "MOTOR",
-        "RELATIONAL",
-        "SOCIAL",
-        "WM",
-    ],
-    "archi": [
-        "ArchiStandard",
-        "ArchiSpatial",
-        "ArchiSocial",
-        "ArchiEmotional",
-    ],
-    "thelittleprince": ["lppFR"],
+    # "HCP900": [
+    #     "EMOTION",
+    #     "GAMBLING",
+    #     "LANGUAGE",
+    #     "MOTOR",
+    #     "RELATIONAL",
+    #     "SOCIAL",
+    #     "WM",
+    # ],
+    # "archi": [
+    #     "ArchiStandard",
+    #     "ArchiSpatial",
+    #     "ArchiSocial",
+    #     "ArchiEmotional",
+    # ],
+    # "thelittleprince": ["lppFR"],
 }
 
 
@@ -85,11 +89,11 @@ dataset_task = {
 # output data paths
 timeseries_path = os.path.join(
     results,
-    f"timeseries_nparcels-{n_parcels}_tasktype-{tasktype}.pkl",
+    f"timeseries_nparcels-{n_parcels}_tasktype-{tasktype}_lowpass-0-1.pkl",
 )
 fc_data_path = os.path.join(
     results,
-    f"connectomes_nparcels-{n_parcels}_tasktype-{tasktype}_trim-{trim_length}.pkl",
+    f"connectomes_nparcels-{n_parcels}_tasktype-{tasktype}_trim-{trim_length}_lowpass-0-1.pkl",
 )
 
 
