@@ -1,5 +1,6 @@
 #!/bin/bash
 #SBATCH --job-name=0.4_lowpass
+#SBATCH -c20
 #SBATCH --output=logs/lowpass_0.4_jobid_%A_%a.out 
 #SBATCH --error=logs/lowpass_0.4_jobid_%A_%a.err
 #SBATCH --partition=normal,parietal
