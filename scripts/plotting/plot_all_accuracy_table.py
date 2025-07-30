@@ -5,12 +5,18 @@ import seaborn as sns
 ### table of all accuracies ###
 
 n_parcels = 200
-trim_length = 293
+trim_length = None
 tasktype = "natural"
 
-plots_root = f"/data/parietal/store3/work/haggarwa/connectivity/plots/wo_extra_GBU_runs/meanscores_nparcels-{n_parcels}_trim-{trim_length}"
-
-results_root = "/data/parietal/store3/work/haggarwa/connectivity/results/wo_extra_GBU_runs"
+# root = "/data/parietal/store3/work/haggarwa/connectivity"
+root = "/Users/himanshu/Desktop/ibc/connectivity"
+results_root = os.path.join(root, "results", "wo_extra_GBU_runs")
+plots_root = os.path.join(
+    root,
+    "plots",
+    "wo_extra_GBU_runs",
+    f"meanscores_nparcels-{n_parcels}_trim-{trim_length}",
+)
 
 within_dir = f"classification-within_tasktype-{tasktype}_nparcels-{n_parcels}_trim-{trim_length}"
 within_pkl = os.path.join(results_root, within_dir, "all_results.pkl")
@@ -67,6 +73,7 @@ for clas in classify:
             .round(2)
         )
         mean_acc = mean_acc.unstack(level=1)
+        mean_acc.loc["mean"] = mean_acc.mean(axis=0).round(2)
         mean_acc["mean"] = mean_acc.mean(axis=1).round(2)
         mean_acc = mean_acc[
             [
