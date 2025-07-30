@@ -22,13 +22,13 @@ from utils.fetching import get_ses_modality, get_confounds, get_niftis
 
 
 def homogenize(data):
-    """Keep only runs with the maximum number of samples. If multiple runs have the same number of samples, cut the longer runs to the length of the shortest run."""
+    """cut all runs to the length of the shortest run"""
 
-    lengths = [len(run) for run in data]
+    lengths = [run.shape[0] for run in data]
     min_length = min(lengths)
     # cut all runs to the length of the shortest run
-    data = [run[:min_length] for run in data]
-    return np.array(data), np.ones(len(data)).astype(bool)
+    data = [run[:min_length, :] for run in data]
+    return data
 
 
 #### INPUTS
@@ -73,12 +73,12 @@ for task in tqdm(tasks):
     y = np.array(motion_data_task["subject_ids"].tolist())
     groups = np.array(motion_data_task["run_labels"].tolist())
 
-    print("Runs before homogenization:", len(X))
-    # homogenize X, y and groups
-    X, mask = homogenize(X)
-    y = y[mask]
-    groups = groups[mask]
-    print("Runs after homogenization:", len(X))
+    print("Run lengths before homogenization:", [run.shape[0] for run in X])
+    X = homogenize(X)
+    print("Run lengths after homogenization:", [run.shape[0] for run in X])
+    X = np.array(X)
+    # flatten each run
+    X = X.reshape((X.shape[0], X.shape[1] * X.shape[-1]))
 
     # number of groups
     n_groups = len(np.unique(groups))
