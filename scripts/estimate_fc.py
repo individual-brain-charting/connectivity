@@ -8,7 +8,7 @@ from nilearn import datasets
 from joblib import Parallel, delayed
 
 # add utils to path
-# sys.path.append(os.path.join(os.path.dirname(__file__), ".."))
+sys.path.append(os.path.join(os.path.dirname(__file__), ".."))
 from utils.fc_estimation import (
     get_connectomes,
     get_time_series,
