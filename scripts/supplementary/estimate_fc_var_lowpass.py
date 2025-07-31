@@ -14,6 +14,12 @@ from utils.fc_estimation import (
     get_time_series,
 )
 
+# read arguments
+if len(sys.argv) > 1:
+    low_pass = float(sys.argv[1])
+else:
+    low_pass = 0.2
+
 #### INPUTS
 # kind of tasks to keep
 #  - "natural" for naturalistic tasks
@@ -38,8 +44,8 @@ n_jobs = 10
 n_parcels = 400
 # cov estimators
 cov_estimators = [
-    "Graphical-Lasso",
-    "Ledoit-Wolf",
+    # "Graphical-Lasso",
+    # "Ledoit-Wolf",
     "Unregularized",
 ]
 # datasets and tasks to extract time series from
@@ -52,36 +58,36 @@ dataset_task = {
         "RestingState",
         "Mario",
         "LePetitPrince",
-        # Archi
-        "ArchiStandard",
-        "ArchiSpatial",
-        "ArchiSocial",
-        "ArchiEmotional",
-        # HCP
-        "HcpEmotion",
-        "HcpGambling",
-        "HcpLanguage",
-        "HcpMotor",
-        "HcpRelational",
-        "HcpSocial",
-        "HcpWm",
+        # # Archi
+        # "ArchiStandard",
+        # "ArchiSpatial",
+        # "ArchiSocial",
+        # "ArchiEmotional",
+        # # HCP
+        # "HcpEmotion",
+        # "HcpGambling",
+        # "HcpLanguage",
+        # "HcpMotor",
+        # "HcpRelational",
+        # "HcpSocial",
+        # "HcpWm",
     ],
-    "HCP900": [
-        "EMOTION",
-        "GAMBLING",
-        "LANGUAGE",
-        "MOTOR",
-        "RELATIONAL",
-        "SOCIAL",
-        "WM",
-    ],
-    "archi": [
-        "ArchiStandard",
-        "ArchiSpatial",
-        "ArchiSocial",
-        "ArchiEmotional",
-    ],
-    "thelittleprince": ["lppFR"],
+    # "HCP900": [
+    #     "EMOTION",
+    #     "GAMBLING",
+    #     "LANGUAGE",
+    #     "MOTOR",
+    #     "RELATIONAL",
+    #     "SOCIAL",
+    #     "WM",
+    # ],
+    # "archi": [
+    #     "ArchiStandard",
+    #     "ArchiSpatial",
+    #     "ArchiSocial",
+    #     "ArchiEmotional",
+    # ],
+    # "thelittleprince": ["lppFR"],
 }
 
 
@@ -89,11 +95,11 @@ dataset_task = {
 # output data paths
 timeseries_path = os.path.join(
     results,
-    f"timeseries_nparcels-{n_parcels}_tasktype-{tasktype}.pkl",
+    f"timeseries_nparcels-{n_parcels}_tasktype-{tasktype}_lowpass-{low_pass}.pkl",
 )
 fc_data_path = os.path.join(
     results,
-    f"connectomes_nparcels-{n_parcels}_tasktype-{tasktype}_trim-{trim_length}.pkl",
+    f"connectomes_nparcels-{n_parcels}_tasktype-{tasktype}_trim-{trim_length}_lowpass-{low_pass}.pkl",
 )
 
 
@@ -152,7 +158,7 @@ else:
             atlas=atlas,
             data_root_path=dataset_root_path,
             dataset=dataset,
-            low_pass=0.2,
+            low_pass=low_pass,
         )
         for dataset, task, dataset_root_path in generator_dataset_task(
             dataset_task, tasktype
