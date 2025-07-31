@@ -138,7 +138,6 @@ def all_combinations(classify, tasks, connectivity_measures, within_task):
 
 #### LOAD CONNECTIVITY
 data = pd.read_pickle(fc_data_path)
-data = data[data["dataset"] == "ibc"]
 
 #### RUN CLASSIFICATION
 # run classification for all combinations of classification, task and
