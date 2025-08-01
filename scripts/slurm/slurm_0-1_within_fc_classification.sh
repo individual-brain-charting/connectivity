@@ -1,5 +1,6 @@
 #!/bin/bash
 #SBATCH --job-name=0.1_within
+#SBATCH -c20
 #SBATCH --output=logs/within_0.1_jobid_%A_%a.out
 #SBATCH --error=logs/within_0.1_jobid_%A_%a.err
 #SBATCH --partition=normal,parietal

@@ -28,8 +28,6 @@ n_jobs = 20
 n_parcels = 400  # or 400
 # number of splits for cross validation
 n_splits = 50
-# do within each task or across all tasks
-within_task = False
 # trim to use
 trim = None
 # we will use the resting state and all the movie-watching sessions
@@ -48,7 +46,10 @@ cov_estimators = [
     "Unregularized",
 ]
 # connectivity measures for each cov estimator
-measures = ["correlation", "partial correlation"]
+measures = [
+    "correlation",
+    # "partial correlation",
+]
 # what to classify
 classify = ["Runs", "Subjects", "Tasks"]
 
