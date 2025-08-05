@@ -1,6 +1,6 @@
 #!/bin/bash
 #SBATCH --job-name=0.1_across
-#SBATCH -c20
+#SBATCH -c10
 #SBATCH --output=logs/across_0.1_jobid_%A_%a.out
 #SBATCH --error=logs/across_0.1_jobid_%A_%a.err
 #SBATCH --partition=normal,parietal
