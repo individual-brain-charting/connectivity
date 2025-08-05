@@ -41,14 +41,14 @@ tasks = [
 ]
 # cov estimators
 cov_estimators = [
-    # "Graphical-Lasso",
+    "Graphical-Lasso",
     # "Ledoit-Wolf",
     "Unregularized",
 ]
 # connectivity measures for each cov estimator
 measures = [
     "correlation",
-    # "partial correlation",
+    "partial correlation",
 ]
 # what to classify
 classify = ["Runs", "Subjects", "Tasks"]
