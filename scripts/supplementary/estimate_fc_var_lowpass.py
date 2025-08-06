@@ -52,12 +52,12 @@ cov_estimators = [
 dataset_task = {
     "ibc": [
         # Naturalistic
-        "GoodBadUgly",
-        "MonkeyKingdom",
-        "Raiders",
+        # "GoodBadUgly",
+        # "MonkeyKingdom",
+        # "Raiders",
         "RestingState",
-        "Mario",
-        "LePetitPrince",
+        # "Mario",
+        # "LePetitPrince",
         # # Archi
         # "ArchiStandard",
         # "ArchiSpatial",
@@ -95,11 +95,11 @@ dataset_task = {
 # output data paths
 timeseries_path = os.path.join(
     results,
-    f"timeseries_nparcels-{n_parcels}_tasktype-{tasktype}_lowpass-{low_pass}.pkl",
+    f"timeseries_nparcels-{n_parcels}_tasktype-RestingState_lowpass-{low_pass}.pkl",
 )
 fc_data_path = os.path.join(
     results,
-    f"connectomes_nparcels-{n_parcels}_tasktype-{tasktype}_trim-{trim_length}_lowpass-{low_pass}.pkl",
+    f"connectomes_nparcels-{n_parcels}_tasktype-RestingState_trim-{trim_length}_lowpass-{low_pass}.pkl",
 )
 
 
