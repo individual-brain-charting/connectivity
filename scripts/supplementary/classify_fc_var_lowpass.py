@@ -15,7 +15,7 @@ from utils.fc_classification import do_cross_validation
 
 # read arguments
 if len(sys.argv) > 1:
-    low_pass = float(sys.argv[1])
+    low_pass = sys.argv[1]
     within_task = True if sys.argv[2] == "within" else False
 else:
     low_pass = 0.2
