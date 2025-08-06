@@ -102,8 +102,6 @@ fc_data_path = os.path.join(
     f"connectomes_nparcels-{n_parcels}_tasktype-RestingState_trim-{trim_length}_lowpass-{low_pass}.pkl",
 )
 
-breakpoint()
-
 
 # filter tasks and generate dataset-task pairs
 def generator_dataset_task(dataset_task, tasktype):
