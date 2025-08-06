@@ -22,10 +22,10 @@ output_dir = os.path.join(
 os.makedirs(output_dir, exist_ok=True)
 
 
-dir_name = "fc_acrosstask_classification_400_lowpass-0.5_20250731-120723"
+dir_name = "fc_acrosstask_classification_400_lowpass-0.5_20250805-135040"
 pkl_05 = os.path.join(results_root, dir_name, "all_results.pkl")
 
-dir_name = "fc_acrosstask_classification_400_lowpass-0.1_20250801-141106"
+dir_name = "fc_acrosstask_classification_400_lowpass-0.1_20250805-142044"
 pkl_01 = os.path.join(results_root, dir_name, "all_results.pkl")
 
 dir_name = "wo_extra_GBU_runs/classification-across_tasktype-natural_nparcels-400_trim-None"
@@ -54,7 +54,11 @@ df_02["lowpass"] = "Original (0.2)"
 df = pd.concat([df_05, df_01, df_02], axis=0)
 df.reset_index(inplace=True, drop=True)
 
-df = df[df["connectivity"] == "Unregularized correlation"]
+df = df[
+    df["connectivity"].isin(
+        ["Unregularized correlation", "Graphical-Lasso partial correlation"]
+    )
+]
 # what to classify
 classify = ["Tasks", "Subjects", "Runs"]
 
@@ -71,6 +75,10 @@ for score in ["balanced_accuracy", "f1_macro"]:
             palette=sns.color_palette("coolwarm", n_colors=3),
             hue="lowpass",
             hue_order=[0.1, "Original (0.2)", "Nyquist limit (0.249)"],
+            order=[
+                "Unregularized correlation",
+                "Graphical-Lasso partial correlation",
+            ],
         )
         for i in ax_score.containers:
             plt.bar_label(
@@ -91,6 +99,10 @@ for score in ["balanced_accuracy", "f1_macro"]:
             hue="lowpass",
             err_kws={"ls": ":"},
             facecolor=(0.8, 0.8, 0.8, 1),
+            order=[
+                "Unregularized correlation",
+                "Graphical-Lasso partial correlation",
+            ],
         )
         if score == "balanced_accuracy":
             plt.xlabel("Accuracy")

@@ -21,10 +21,10 @@ output_dir = os.path.join(
 )
 os.makedirs(output_dir, exist_ok=True)
 
-dir_name = "fc_withintask_classification_400_lowpass-0.5_20250801-141032"
+dir_name = "fc_withintask_classification_400_lowpass-0.1_20250805-120917"
 pkl_05 = os.path.join(results_root, dir_name, "all_results.pkl")
 
-dir_name = "fc_withintask_classification_400_lowpass-0.1_20250801-141038"
+dir_name = "fc_withintask_classification_400_lowpass-0.5_20250805-120917"
 pkl_01 = os.path.join(results_root, dir_name, "all_results.pkl")
 
 dir_name = "wo_extra_GBU_runs/classification-within_tasktype-natural_nparcels-400_trim-None"
@@ -54,7 +54,11 @@ df_02["lowpass"] = "Original (0.2)"
 df = pd.concat([df_05, df_01, df_02], axis=0)
 df.reset_index(inplace=True, drop=True)
 
-df = df[df["connectivity"] == "Unregularized correlation"]
+df = df[
+    df["connectivity"].isin(
+        ["Unregularized correlation", "Graphical-Lasso partial correlation"]
+    )
+]
 
 # what to classify
 classify = ["Tasks", "Subjects", "Runs"]
@@ -78,7 +82,11 @@ for score in ["balanced_accuracy", "f1_macro"]:
             print(df_["task_label"].unique())
             df_ = df_[df_["task_label"].isin(movies)]
             print(len(df_))
-        order = [0.1, "Original (0.2)", "Nyquist limit (0.249)"]
+        hue_order = [0.1, "Original (0.2)", "Nyquist limit (0.249)"]
+        order = [
+            "Unregularized correlation",
+            "Graphical-Lasso partial correlation",
+        ]
 
         ax_score = sns.barplot(
             y="connectivity",
@@ -87,7 +95,8 @@ for score in ["balanced_accuracy", "f1_macro"]:
             orient="h",
             hue="lowpass",
             palette=sns.color_palette("coolwarm", n_colors=3),
-            hue_order=order,
+            hue_order=hue_order,
+            order=order,
             # errwidth=1,
         )
         wrap_labels(ax_score, 20)
@@ -107,7 +116,8 @@ for score in ["balanced_accuracy", "f1_macro"]:
             data=df_,
             orient="h",
             hue="lowpass",
-            hue_order=order,
+            hue_order=hue_order,
+            order=order,
             facecolor=(0.8, 0.8, 0.8, 1),
             err_kws={"ls": ":"},
         )

@@ -7,10 +7,7 @@ from glob import glob
 results_root = "/Users/himanshu/Desktop/ibc/connectivity/results"
 
 dir_names = [
-    "fc_acrosstask_classification_400_lowpass-0.5_20250731-120723",
-    "fc_acrosstask_classification_400_lowpass-0.1_20250801-141106",
-    "fc_withintask_classification_400_lowpass-0.1_20250801-141038",
-    "fc_withintask_classification_400_lowpass-0.5_20250801-141032",
+    "fc_acrosstask_classification_400_lowpass-0.1_20250805-142044",
 ]
 for dir_name in dir_names:
     results_pkl = os.path.join(results_root, dir_name, "all_results.pkl")
