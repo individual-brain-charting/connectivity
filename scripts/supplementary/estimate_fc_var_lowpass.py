@@ -109,11 +109,11 @@ def generator_dataset_task(dataset_task, tasktype):
         dataset_task.pop("archi", None)
         dataset_task.pop("HCP900", None)
         dataset_task["ibc"] = [
-            "GoodBadUgly",
-            "MonkeyKingdom",
-            "Raiders",
-            "Mario",
-            "LePetitPrince",
+            # "GoodBadUgly",
+            # "MonkeyKingdom",
+            # "Raiders",
+            # "Mario",
+            # "LePetitPrince",
             "RestingState",
         ]
     elif tasktype == "domain":
