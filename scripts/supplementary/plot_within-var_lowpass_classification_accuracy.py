@@ -21,20 +21,20 @@ output_dir = os.path.join(
 )
 os.makedirs(output_dir, exist_ok=True)
 
-dir_name = "fc_withintask_classification_400_lowpass-0.1_20250805-120917"
-pkl_05 = os.path.join(results_root, dir_name, "all_results.pkl")
+dir_name = "fc_withintask_classification_400_lowpass-nyquist_20250806-182411"
+pkl_nyquist = os.path.join(results_root, dir_name, "all_results.pkl")
 
-dir_name = "fc_withintask_classification_400_lowpass-0.5_20250805-120917"
+dir_name = "fc_withintask_classification_400_lowpass-0.1_20250805-120917"
 pkl_01 = os.path.join(results_root, dir_name, "all_results.pkl")
 
 dir_name = "wo_extra_GBU_runs/classification-within_tasktype-natural_nparcels-400_trim-None"
 pkl_02 = os.path.join(results_root, dir_name, "all_results.pkl")
 
-df_05 = pd.read_pickle(pkl_05)
-df_05[df_05.select_dtypes(include=["number"]).columns] *= 100
-df_05["lowpass"] = "Nyquist limit (0.249)"
+df_nyquist = pd.read_pickle(pkl_nyquist)
+df_nyquist[df_nyquist.select_dtypes(include=["number"]).columns] *= 100
+df_nyquist["lowpass"] = "Nyquist limit (0.249)"
 # add suffix "mostfreq" to all dummy columns
-df_05 = df_05.rename(
+df_nyquist = df_nyquist.rename(
     columns=lambda x: x + "_mostfreq" if x.startswith("dummy_") else x
 )
 
@@ -51,7 +51,7 @@ df_02[df_02.select_dtypes(include=["number"]).columns] *= 100
 df_02["lowpass"] = "Original (0.2)"
 
 # combine dataframes
-df = pd.concat([df_05, df_01, df_02], axis=0)
+df = pd.concat([df_nyquist, df_01, df_02], axis=0)
 df.reset_index(inplace=True, drop=True)
 
 df = df[
