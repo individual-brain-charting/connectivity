@@ -123,14 +123,26 @@ if within_task:
     print("Starting within task cross validation......")
 else:
     print("Starting across task cross validation......")
-all_results = Parallel(n_jobs=n_jobs, verbose=11, backend="loky")(
-    delayed(do_cross_validation)(
+# all_results = Parallel(n_jobs=n_jobs, verbose=11, backend="loky")(
+#     delayed(do_cross_validation)(
+#         classes, task, n_splits, connectivity_measure, data, output_dir
+#     )
+#     for classes, task, connectivity_measure in all_combinations(
+#         classify, tasks, connectivity_measures, within_task
+#     )
+# )
+
+all_results = []
+for classes, task, connectivity_measure in all_combinations(
+    classify, tasks, connectivity_measures, within_task
+):
+    print(
+        f"Classes: {classes}, Task: {task}, Connectivity Measure: {connectivity_measure}"
+    )
+    res = do_cross_validation(
         classes, task, n_splits, connectivity_measure, data, output_dir
     )
-    for classes, task, connectivity_measure in all_combinations(
-        classify, tasks, connectivity_measures, within_task
-    )
-)
+    all_results.append(res)
 
 #### SAVE RESULTS
 print("Saving results...")
