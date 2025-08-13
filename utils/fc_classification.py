@@ -20,7 +20,6 @@ from tqdm import tqdm
 
 
 def drop_nan_samples(X, y, groups, task_label, connectivity_measure, classify):
-    breakpoint()
     nan_indices = np.where(np.isnan(X).all(axis=1))
     if len(nan_indices[0]) > 0:
         print(
@@ -348,7 +347,6 @@ def do_cross_validation(
     )
     # pick specific connectome to classify based on Sconnectivity measure
     connectomes = np.array(data[connectivity_measure].values.tolist())
-    breakpoint()
     # drop samples with NaNs
     connectomes, classes, groups = drop_nan_samples(
         connectomes,

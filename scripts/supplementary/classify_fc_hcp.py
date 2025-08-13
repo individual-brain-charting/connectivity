@@ -31,13 +31,13 @@ n_splits = 50
 # trim to use
 trim = None
 tasks = [
-    "EMOTION",
-    "GAMBLING",
-    "LANGUAGE",
-    "MOTOR",
-    "RELATIONAL",
-    "SOCIAL",
-    "WM",
+    "HcpEmotion",
+    "HcpGambling",
+    "HcpLanguage",
+    "HcpMotor",
+    "HcpRelational",
+    "HcpSocial",
+    "HcpWm",
 ]
 # what to classify
 classify = ["Subjects"]
