@@ -52,7 +52,7 @@ connectivity_measures = [
 # cache and root output directory
 data_root = "/data/parietal/store3/work/haggarwa/connectivity/data/"
 # results directory
-results = "/data/parietal/store3/work/haggarwa/connectivity/results/wo_extra_GBU_runs"
+results = "/data/parietal/store3/work/haggarwa/connectivity/results/"
 os.makedirs(results, exist_ok=True)
 
 if within_task:
