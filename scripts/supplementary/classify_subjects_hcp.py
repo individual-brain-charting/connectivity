@@ -34,7 +34,7 @@ def all_combinations(tasks, connectivity_measures):
 
 
 def hcp_subject_fingerprinting_pairwisetasks(
-    df, task1, task_2, connectivity_measure
+    df, task_1, task_2, connectivity_measure
 ):
     all_scores = {}
     df_task1_task2 = df[df["tasks"].isin([task_1, task_2])]
