@@ -5,6 +5,7 @@ from sklearn.svm import LinearSVC
 from joblib import Parallel, delayed, dump
 import time
 
+
 def get_nan_indices(df):
     X = np.array(df["Graphical-Lasso partial correlation"].values.tolist())
     return np.where(np.isnan(X).all(axis=1))
@@ -64,11 +65,15 @@ def hcp_subject_fingerprinting_pairwisetasks(
         return_indices=True,
         verbose=11,
     )
-    return all_scores[f"{task_1}_{task_2}_{connectivity_measure}"] = {
+    return {
         "scores": scores,
         "mean_f1_macro": np.mean(scores["test_f1_macro"]),
         "mean_balanced_accuracy": np.mean(scores["test_balanced_accuracy"]),
+        "task1": task_1,
+        "task2": task_2,
+        "connectivity_measure": connectivity_measure,
     }
+
 
 fc_data_path = "/data/parietal/store3/work/haggarwa/connectivity/results/connectomes_nparcels-200_tasktype-domain_trim-None.pkl"
 
@@ -102,6 +107,7 @@ all_results = Parallel(n_jobs=50, verbose=11)(
         tasks, connectivity_measures
     )
 )
+all_results = pd.DataFrame(all_results)
 
 # Save the results
 results_dir = "/data/parietal/store3/work/haggarwa/connectivity/results/"
@@ -109,7 +115,7 @@ output_dir = f"hcp_subject_fingerprinting_pairwise_tasks_{time.strftime('%Y%m%d-
 output_path = os.path.join(results_dir, output_dir)
 os.makedirs(output_path, exist_ok=True)
 # Save the results to a file
-dump(all_results, os.path.join(output_path, "all_results.pkl"))
+all_results.to_pickle(os.path.join(output_path, "all_results.pkl"))
 
 # Print the results
 print(all_results)
