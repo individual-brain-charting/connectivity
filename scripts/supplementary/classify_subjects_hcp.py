@@ -99,7 +99,7 @@ connectivity_measures = [
 ]
 
 # all results
-all_results = Parallel(n_jobs=50, verbose=11)(
+all_results = Parallel(n_jobs=10, verbose=11)(
     delayed(hcp_subject_fingerprinting_pairwisetasks)(
         df, task_1, task_2, connectivity_measure
     )
