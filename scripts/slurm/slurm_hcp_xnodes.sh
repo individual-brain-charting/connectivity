@@ -2,7 +2,7 @@
 #
 #SBATCH --job-name=hcp_classify_fc
 #SBATCH -c63
-#SBATCH --partition=parietal,normal
+#SBATCH --partition=normal,parietal
 #SBATCH --error=logs/jobid_%A_%a.err
 #SBATCH --output=logs/jobid_%A_%a.out
 #SBATCH --array=1-63
