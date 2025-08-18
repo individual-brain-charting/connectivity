@@ -1,0 +1,63 @@
+HcpEmotion HcpGambling Graphical-Lasso partial correlation
+HcpEmotion HcpGambling Unregularized correlation
+HcpEmotion HcpGambling Ledoit-Wolf correlation
+HcpEmotion HcpLanguage Graphical-Lasso partial correlation
+HcpEmotion HcpLanguage Unregularized correlation
+HcpEmotion HcpLanguage Ledoit-Wolf correlation
+HcpEmotion HcpMotor Graphical-Lasso partial correlation
+HcpEmotion HcpMotor Unregularized correlation
+HcpEmotion HcpMotor Ledoit-Wolf correlation
+HcpEmotion HcpRelational Graphical-Lasso partial correlation
+HcpEmotion HcpRelational Unregularized correlation
+HcpEmotion HcpRelational Ledoit-Wolf correlation
+HcpEmotion HcpSocial Graphical-Lasso partial correlation
+HcpEmotion HcpSocial Unregularized correlation
+HcpEmotion HcpSocial Ledoit-Wolf correlation
+HcpEmotion HcpWm Graphical-Lasso partial correlation
+HcpEmotion HcpWm Unregularized correlation
+HcpEmotion HcpWm Ledoit-Wolf correlation
+HcpGambling HcpLanguage Graphical-Lasso partial correlation
+HcpGambling HcpLanguage Unregularized correlation
+HcpGambling HcpLanguage Ledoit-Wolf correlation
+HcpGambling HcpMotor Graphical-Lasso partial correlation
+HcpGambling HcpMotor Unregularized correlation
+HcpGambling HcpMotor Ledoit-Wolf correlation
+HcpGambling HcpRelational Graphical-Lasso partial correlation
+HcpGambling HcpRelational Unregularized correlation
+HcpGambling HcpRelational Ledoit-Wolf correlation
+HcpGambling HcpSocial Graphical-Lasso partial correlation
+HcpGambling HcpSocial Unregularized correlation
+HcpGambling HcpSocial Ledoit-Wolf correlation
+HcpGambling HcpWm Graphical-Lasso partial correlation
+HcpGambling HcpWm Unregularized correlation
+HcpGambling HcpWm Ledoit-Wolf correlation
+HcpLanguage HcpMotor Graphical-Lasso partial correlation
+HcpLanguage HcpMotor Unregularized correlation
+HcpLanguage HcpMotor Ledoit-Wolf correlation
+HcpLanguage HcpRelational Graphical-Lasso partial correlation
+HcpLanguage HcpRelational Unregularized correlation
+HcpLanguage HcpRelational Ledoit-Wolf correlation
+HcpLanguage HcpSocial Graphical-Lasso partial correlation
+HcpLanguage HcpSocial Unregularized correlation
+HcpLanguage HcpSocial Ledoit-Wolf correlation
+HcpLanguage HcpWm Graphical-Lasso partial correlation
+HcpLanguage HcpWm Unregularized correlation
+HcpLanguage HcpWm Ledoit-Wolf correlation
+HcpMotor HcpRelational Graphical-Lasso partial correlation
+HcpMotor HcpRelational Unregularized correlation
+HcpMotor HcpRelational Ledoit-Wolf correlation
+HcpMotor HcpSocial Graphical-Lasso partial correlation
+HcpMotor HcpSocial Unregularized correlation
+HcpMotor HcpSocial Ledoit-Wolf correlation
+HcpMotor HcpWm Graphical-Lasso partial correlation
+HcpMotor HcpWm Unregularized correlation
+HcpMotor HcpWm Ledoit-Wolf correlation
+HcpRelational HcpSocial Graphical-Lasso partial correlation
+HcpRelational HcpSocial Unregularized correlation
+HcpRelational HcpSocial Ledoit-Wolf correlation
+HcpRelational HcpWm Graphical-Lasso partial correlation
+HcpRelational HcpWm Unregularized correlation
+HcpRelational HcpWm Ledoit-Wolf correlation
+HcpSocial HcpWm Graphical-Lasso partial correlation
+HcpSocial HcpWm Unregularized correlation
+HcpSocial HcpWm Ledoit-Wolf correlation

@@ -4,6 +4,7 @@ from sklearn.model_selection import GroupKFold, cross_validate
 from sklearn.svm import LinearSVC
 from joblib import Parallel, delayed, dump
 import time
+import os
 
 
 def get_nan_indices(df):
@@ -12,6 +13,7 @@ def get_nan_indices(df):
 
 
 def all_combinations(tasks, connectivity_measures):
+    strings = []
     combinations = []
     for task_1 in tasks:
         for task_2 in tasks:
@@ -19,13 +21,14 @@ def all_combinations(tasks, connectivity_measures):
                 f"{task_1}_{task_2}",
                 f"{task_2}_{task_1}",
             }
-            if not possible_combinations.issubset(set(combinations)):
-                already_done = False
-            else:
+            if possible_combinations & set(strings):
                 already_done = True
+            else:
+                already_done = False
             if task_1 == task_2:
                 continue
             elif task_1 != task_2 and not already_done:
+                strings.append(f"{task_1}_{task_2}")
                 combinations.append((task_1, task_2))
 
     for combination in combinations:
@@ -75,7 +78,11 @@ def hcp_subject_fingerprinting_pairwisetasks(
     }
 
 
-fc_data_path = "/data/parietal/store3/work/haggarwa/connectivity/results/connectomes_nparcels-200_tasktype-domain_trim-None.pkl"
+# root = "/data/parietal/store3/work/haggarwa/connectivity/results/"
+root = "/Users/himanshu/Desktop/ibc/connectivity/results/"
+fc_data_path = os.path.join(
+    root, "connectomes_nparcels-200_tasktype-domain_trim-None.pkl"
+)
 
 df = pd.read_pickle(fc_data_path)
 
@@ -110,9 +117,8 @@ all_results = Parallel(n_jobs=10, verbose=11)(
 all_results = pd.DataFrame(all_results)
 
 # Save the results
-results_dir = "/data/parietal/store3/work/haggarwa/connectivity/results/"
 output_dir = f"hcp_subject_fingerprinting_pairwise_tasks_{time.strftime('%Y%m%d-%H%M%S')}"
-output_path = os.path.join(results_dir, output_dir)
+output_path = os.path.join(root, output_dir)
 os.makedirs(output_path, exist_ok=True)
 # Save the results to a file
 all_results.to_pickle(os.path.join(output_path, "all_results.pkl"))
