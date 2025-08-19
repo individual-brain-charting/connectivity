@@ -2,6 +2,7 @@ import pandas as pd
 import numpy as np
 from sklearn.model_selection import GroupKFold, cross_validate
 from sklearn.svm import LinearSVC
+from sklearn.dummy import DummyClassifier
 from joblib import Parallel, delayed, dump
 import time
 import os
@@ -29,8 +30,8 @@ def hcp_subject_fingerprinting_pairwisetasks(
     n_groups = cv_splits = len(np.unique(groups))
     # set-up cross-validation scheme
     cv = GroupKFold(n_splits=n_groups, random_state=0, shuffle=True)
-    classifier = LinearSVC(max_iter=100000, dual="auto")
-
+    # classifier = LinearSVC(max_iter=100000, dual="auto")
+    classifier = DummyClassifier(strategy="most_frequent")
     # cross-validate
     scores = cross_validate(
         classifier,
@@ -99,7 +100,7 @@ if __name__ == "__main__":
     )
 
     # Save the results
-    output_dir = "hcp_subject_fingerprinting_pairwise_tasks"
+    output_dir = "hcp_subject_fingerprinting_pairwise_tasks_dummy"
     output_path = os.path.join(root, output_dir)
     os.makedirs(output_path, exist_ok=True)
     # Save the results to a file
