@@ -15,4 +15,4 @@ LINE=$(sed -n "${SLURM_ARRAY_TASK_ID}p" $COMBINATIONS_FILE)
 read -r TASK1 TASK2 CONNECTIVITY_MEASURE <<< "$LINE"
 
 # Run the Python script with the extracted arguments
-srun python /data/parietal/store3/work/haggarwa/connectivity/scripts/supplementary/classify_permute_subjects_hcp_slurm_compatible.py "$TASK1" "$TASK2" "$CONNECTIVITY_MEASURE"
+srun python /data/parietal/store3/work/haggarwa/connectivity/scripts/supplementary/classify_permute_test_subjects_hcp_slurm_compatible.py "$TASK1" "$TASK2" "$CONNECTIVITY_MEASURE"
