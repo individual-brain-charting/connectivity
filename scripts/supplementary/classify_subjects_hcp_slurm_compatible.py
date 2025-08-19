@@ -31,7 +31,7 @@ def hcp_subject_fingerprinting_pairwisetasks(
     # set-up cross-validation scheme
     cv = GroupKFold(n_splits=n_groups, random_state=0, shuffle=True)
     # classifier = LinearSVC(max_iter=100000, dual="auto")
-    classifier = DummyClassifier(strategy="most_frequent")
+    classifier = DummyClassifier(strategy="uniform", random_state=0)
     # cross-validate
     scores = cross_validate(
         classifier,
@@ -100,7 +100,7 @@ if __name__ == "__main__":
     )
 
     # Save the results
-    output_dir = "hcp_subject_fingerprinting_pairwise_tasks_dummy"
+    output_dir = "hcp_subject_fingerprinting_pairwise_tasks_dummy_uniform"
     output_path = os.path.join(root, output_dir)
     os.makedirs(output_path, exist_ok=True)
     # Save the results to a file
