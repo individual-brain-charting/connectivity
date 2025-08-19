@@ -1,13 +1,17 @@
+### fc-sc similarity, network-wise matrix
+
 import os
 import pandas as pd
 import seaborn as sns
 import numpy as np
-from nilearn.connectome import vec_to_sym_matrix
+from nilearn.connectome import vec_to_sym_matrix, sym_matrix_to_vec
 from nilearn import datasets
 from sklearn import preprocessing
+import sys
+from matplotlib import pyplot as plt
 
 # add utils to path
-sys.path.append(os.path.join(os.path.dirname(__file__), ".."))
+sys.path.append(os.path.join(os.path.dirname(__file__), "..", ".."))
 from utils.plot import (
     get_network_labels,
     get_lower_tri_heatmap,
@@ -18,25 +22,39 @@ sns.set_theme()
 sns.set_style("whitegrid")
 sns.set_context("talk")
 
-### fc-sc similarity, network-wise matrix
+# root = "/data/parietal/store3/work/haggarwa/connectivity"
+root = "/Users/himanshu/Desktop/ibc/connectivity"
+results_root = os.path.join(
+    root,
+    "results",
+)
+plots_root = os.path.join(root, "plots", "wo_extra_GBU_runs")
 
-cache = DATA_ROOT = "/data/parietal/store2/work/haggarwa/"
 
-labels_fmt = "network"
 n_parcels = 400
-if n_parcels == 400:
-    fc_data_path = os.path.join(cache, "connectomes_400_comprcorr")
-    sc_data_path = os.path.join(cache, "sc_data_native_new")
-    output_dir = "fc-sc_similarity_networkwise_plots_compcorr"
-elif n_parcels == 200:
-    fc_data_path = os.path.join(cache, "connectomes_200_comprcorr")
-    sc_data_path = os.path.join(cache, "sc_data_native_200")
-    output_dir = "fc-sc_similarity_networkwise_plots_200_compcorr"
+trim_length = None
+do_hatch = False
+labels_fmt = "network"  # "hemi network" or "network"
 
-output_dir = os.path.join(DATA_ROOT, output_dir)
-os.makedirs(output_dir, exist_ok=True)
+fc_data_path = os.path.join(
+    results_root,
+    "wo_extra_GBU_runs",
+    f"connectomes_nparcels-{n_parcels}_tasktype-natural_trim-{trim_length}.pkl",
+)
+sc_data_path = os.path.join(
+    results_root,
+    f"sc_data_native_{n_parcels}",
+)
 fc_data = pd.read_pickle(fc_data_path)
+fc_data = fc_data[fc_data["dataset"] == "ibc"]
 sc_data = pd.read_pickle(sc_data_path)
+
+out_dir_name = (
+    f"fcsc_similarity_networkwise_nparcels-{n_parcels}_trim-{trim_length}"
+)
+output_dir = os.path.join(plots_root, out_dir_name)
+os.makedirs(output_dir, exist_ok=True)
+
 
 # cov estimators
 cov_estimators = ["Graphical-Lasso", "Ledoit-Wolf", "Unregularized"]
@@ -49,11 +67,12 @@ tasks = [
     "GoodBadUgly",
     "MonkeyKingdom",
     "Mario",
+    "LePetitPrince",
 ]
 
 # get atlas for yeo network labels
 atlas = datasets.fetch_atlas_schaefer_2018(
-    data_dir=cache, resolution_mm=2, n_rois=n_parcels
+    data_dir=root, resolution_mm=2, n_rois=n_parcels
 )
 
 fc_data = mean_connectivity(fc_data, tasks, cov_estimators, measures)
@@ -71,7 +90,6 @@ encoded_labels = le.fit_transform(labels)
 unique_labels = np.unique(encoded_labels)
 
 results = []
-
 for cov in cov_estimators:
     for measure in measures:
         for task in tasks:
@@ -124,6 +142,8 @@ for cov in cov_estimators:
                         corr = np.corrcoef(sub_struc_network, sub_func_network)
                         print(corr, f"{task} {sub} {cov} {measure}")
                         network_pair_corr[network_i][network_j] = corr[0][1]
+
+                network_pair_corr = sym_matrix_to_vec(network_pair_corr)
                 result = {
                     "corr": network_pair_corr,
                     "task": task,
@@ -141,6 +161,7 @@ for _, row in results.iterrows():
     corr = row["corr"]
     title = f"{task} {sub} {cov}"
     output = os.path.join(output_dir, f"{task}_{sub}_{cov}")
+    corr = vec_to_sym_matrix(corr)
     get_lower_tri_heatmap(
         corr,
         figsize=(5, 5),
@@ -154,15 +175,25 @@ for _, row in results.iterrows():
 # take a mean of the network wise correlations across subjects
 # gives a network wise correlation matrix for each task and cov measure
 fc_sc_corr_tasks = (
-    results.groupby(["task", "cov measure"]).mean().reset_index()
+    results.groupby(["task", "cov measure"])["corr"].mean().reset_index()
 )
-for _, row in results.iterrows():
+for _, row in fc_sc_corr_tasks.iterrows():
     task = row["task"]
-    sub = row["subject"]
     cov = row["cov measure"]
     corr = row["corr"]
-    title = f"{task} {sub} {cov}"
+    title = f"{task} {cov}"
     output = os.path.join(output_dir, f"mean_{task}_{cov}")
+    corr = vec_to_sym_matrix(corr)
+    # get diagonal of corr
+    diagonal = np.diag(corr)
+    # barplot the diagonal values with labels on x-axis
+    sns.barplot(x=le.inverse_transform(unique_labels), y=diagonal)
+    plt.title(title)
+    plt.xlabel("Network")
+    plt.ylabel("Correlation")
+    plt.savefig(output + "_boxplot.png")
+    plt.close()
+
     get_lower_tri_heatmap(
         corr,
         figsize=(5, 5),
