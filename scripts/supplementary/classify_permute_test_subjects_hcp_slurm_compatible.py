@@ -44,7 +44,7 @@ def hcp_subject_fingerprinting_pairwisetasks(
         cv=cv,
         n_permutations=100,
         n_jobs=1,
-        scoring=["balanced_accuracy", "f1_macro"],
+        scoring="f1_macro",
         verbose=11,
         random_state=0,
     )
