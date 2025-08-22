@@ -17,8 +17,8 @@ from utils.fc_classification import do_cross_validation
 if len(sys.argv) > 1:
     low_pass = sys.argv[1]
     within_task = True if sys.argv[2] == "within" else False
-    classify = list(sys.argv[3])
-    connectivity_measures = list(sys.argv[4])
+    classify = [sys.argv[3]]
+    connectivity_measures = [sys.argv[4]]
 else:
     low_pass = 0.2
     within_task = False
