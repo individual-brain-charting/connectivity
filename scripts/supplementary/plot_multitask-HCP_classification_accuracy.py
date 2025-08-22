@@ -58,7 +58,7 @@ for score in ["balanced_accuracy", "f1_macro"]:
             for i in ax_score.containers:
                 plt.bar_label(
                     i,
-                    fmt="%.3f",
+                    fmt="%.1f",
                     label_type="edge",
                     fontsize="x-small",
                     padding=-45,

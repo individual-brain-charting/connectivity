@@ -16,22 +16,26 @@ sns.set_context("talk")
 root = "/Users/himanshu/Desktop/ibc/connectivity"
 results_root = os.path.join(root, "results")
 dir_name = "hcp_subject_fingerprinting_pairwise_tasks"
+dummy_dir_name = "hcp_subject_fingerprinting_pairwise_tasks_dummy"
 results_pkl = os.path.join(results_root, dir_name, "all_results.pkl")
+dummy_results_pkl = os.path.join(
+    results_root, dummy_dir_name, "all_results.pkl"
+)
 
 plots_root = os.path.join(root, "plots")
 output_dir = os.path.join(plots_root, dir_name)
 os.makedirs(output_dir, exist_ok=True)
 
 df = pd.read_pickle(results_pkl)
+df_dummy = pd.read_pickle(dummy_results_pkl)
 
 measures = [
     "Unregularized correlation",
-    "Ledoit-Wolf correlation",
     "Graphical-Lasso partial correlation",
 ]
 
 df[df.select_dtypes(include=["number"]).columns] *= 100
-breakpoint()
+df_dummy[df_dummy.select_dtypes(include=["number"]).columns] *= 100
 for score in ["balanced_accuracies", "f1_scores"]:
     for how_many in ["all", "three"]:
         ax_score = sns.barplot(
@@ -46,7 +50,7 @@ for score in ["balanced_accuracies", "f1_scores"]:
         for i in ax_score.containers:
             plt.bar_label(
                 i,
-                fmt="%.3f",
+                fmt="%.1f",
                 label_type="edge",
                 fontsize="x-small",
                 padding=-45,
@@ -54,6 +58,17 @@ for score in ["balanced_accuracies", "f1_scores"]:
                 color="white",
             )
         wrap_labels(ax_score, 20)
+        ax_chance = sns.barplot(
+            y="connectivity_measure",
+            x=score,
+            data=df_dummy,
+            orient="h",
+            palette=sns.color_palette("pastel")[7:],
+            order=measures,
+            facecolor=(0.8, 0.8, 0.8, 1),
+            err_kws={"ls": ":"},
+        )
+
         if score == "balanced_accuracy":
             plt.xlabel("Accuracy")
         else:
