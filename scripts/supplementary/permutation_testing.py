@@ -11,7 +11,7 @@ from joblib import Parallel, delayed
 
 # add utils to path
 sys.path.append(os.path.join(os.path.dirname(__file__), "..", ".."))
-from utils.fc_classification import do_cross_validation
+from utils.fc_classification import do_permute_test
 
 # read arguments
 if len(sys.argv) > 1:
