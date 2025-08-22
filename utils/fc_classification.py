@@ -18,6 +18,7 @@ from sklearn.model_selection import (
 from sklearn.svm import LinearSVC
 from sklearn.dummy import DummyClassifier
 from tqdm import tqdm
+from joblib import dump
 
 
 def drop_nan_samples(X, y, groups, task_label, connectivity_measure, classify):
@@ -503,7 +504,7 @@ def _plot_cv_indices(
 
 
 def do_permute_test(
-    classify, task, cv_splits, connectivity_measure, data, root, n_permutations
+    classify, task, connectivity_measure, data, root, n_permutations
 ):
     cov = connectivity_measure.split(" ")[0]
     if isinstance(task, list) and len(task) > 2:
@@ -527,13 +528,13 @@ def do_permute_test(
         connectivity_measure,
         classify,
     )
-    n_groups = cv_splits = len(np.unique(groups))
+    n_groups = len(np.unique(groups))
     # set-up cross-validation scheme
     cv = StratifiedGroupKFold(n_splits=n_groups, random_state=0, shuffle=True)
     cv_scheme = "StratifiedGroupKFold"
     # set-up output directory
     results_dir = os.path.join(
-        root, f"{classify}_{cov}_{cv_scheme}_{cv_splits}"
+        root, f"{classify}_{cov}_{cv_scheme}_{n_groups}"
     )
     os.makedirs(results_dir, exist_ok=True)
 
@@ -560,13 +561,11 @@ def do_permute_test(
         "classes": classify,
     }
 
-    results_df = pd.DataFrame(results)
     # save the results
     results_file = os.path.join(
         results_dir,
         f"{task_label}_{connectivity_measure}_results.pkl",
     )
-    results_df.to_pickle(results_file)
-    # do_plots(results, results_dir, classify)
+    dump(results, results_file)
 
-    return results_df
+    return results

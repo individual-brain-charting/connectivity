@@ -7,7 +7,7 @@ import sys
 import pandas as pd
 import seaborn as sns
 from nilearn import datasets
-from joblib import Parallel, delayed
+from joblib import Parallel, delayed, dump
 
 # add utils to path
 sys.path.append(os.path.join(os.path.dirname(__file__), "..", ".."))
@@ -147,7 +147,6 @@ for classes, task, connectivity_measure in all_combinations(
         do_permute_test(
             classes,
             task,
-            n_splits,
             connectivity_measure,
             data,
             output_dir,
@@ -157,6 +156,4 @@ for classes, task, connectivity_measure in all_combinations(
 
 #### SAVE RESULTS
 print("Saving results...")
-all_results = pd.concat(all_results)
-# save the results
-all_results.to_pickle(os.path.join(output_dir, "all_results.pkl"))
+dump(all_results, os.path.join(output_dir, "all_results.pkl"))
