@@ -13,6 +13,7 @@ from sklearn.model_selection import (
     GroupShuffleSplit,
     LeavePGroupsOut,
     StratifiedGroupKFold,
+    permutation_test_score,
 )
 from sklearn.svm import LinearSVC
 from sklearn.dummy import DummyClassifier
@@ -499,3 +500,73 @@ def _plot_cv_indices(
     plot_file = os.path.join(split_dir, plot_file)
     fig.savefig(plot_file, bbox_inches="tight")
     plt.close(fig)
+
+
+def do_permute_test(
+    classify, task, cv_splits, connectivity_measure, data, root, n_permutations
+):
+    cov = connectivity_measure.split(" ")[0]
+    if isinstance(task, list) and len(task) > 2:
+        pooled_tasks = True
+    else:
+        pooled_tasks = False
+
+    # select data based current task and whatever is being classified
+    # get classes and groups
+    data, task_label, classes, groups = _select_data(
+        data, classify, task, pooled_tasks
+    )
+    # pick specific connectome to classify based on Sconnectivity measure
+    connectomes = np.array(data[connectivity_measure].values.tolist())
+    # drop samples with NaNs
+    connectomes, classes, groups = drop_nan_samples(
+        connectomes,
+        classes,
+        groups,
+        task_label,
+        connectivity_measure,
+        classify,
+    )
+    n_groups = cv_splits = len(np.unique(groups))
+    # set-up cross-validation scheme
+    cv = StratifiedGroupKFold(n_splits=n_groups, random_state=0, shuffle=True)
+    cv_scheme = "StratifiedGroupKFold"
+    # set-up output directory
+    results_dir = os.path.join(
+        root, f"{classify}_{cov}_{cv_scheme}_{cv_splits}"
+    )
+    os.makedirs(results_dir, exist_ok=True)
+
+    classifier = LinearSVC(max_iter=100000, dual="auto")
+
+    score, permutation_scores, pvalue = permutation_test_score(
+        classifier,
+        connectomes,
+        classes,
+        groups=groups,
+        cv=cv,
+        n_permutations=n_permutations,
+        n_jobs=n_permutations,
+        scoring="f1_macro",
+        verbose=11,
+        random_state=0,
+    )
+    results = {
+        "scores": score,
+        "permutation_scores": permutation_scores,
+        "pvalue": pvalue,
+        "task_label": task_label,
+        "connectivity_measure": connectivity_measure,
+        "classes": classify,
+    }
+
+    results_df = pd.DataFrame(results)
+    # save the results
+    results_file = os.path.join(
+        results_dir,
+        f"{task_label}_{connectivity_measure}_results.pkl",
+    )
+    results_df.to_pickle(results_file)
+    # do_plots(results, results_dir, classify)
+
+    return results_df
