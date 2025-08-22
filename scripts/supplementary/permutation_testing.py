@@ -55,12 +55,12 @@ os.makedirs(results, exist_ok=True)
 
 if within_task:
     output_dir = (
-        f"classification_within-permute_tasktype-domain"
+        f"classification_within-permute_tasktype-natural"
         f"_n_parcels-{n_parcels}_trim-{trim}_{time.strftime('%Y%m%d-%H%M%S')}"
     )
 else:
     output_dir = (
-        f"classification_across-permute_tasktype-domain"
+        f"classification_across-permute_tasktype-natural"
         f"_n_parcels-{n_parcels}_trim-{trim}_{time.strftime('%Y%m%d-%H%M%S')}"
     )
 output_dir = os.path.join(results, "permutation_tests", output_dir)
@@ -69,7 +69,7 @@ os.makedirs(output_dir, exist_ok=True)
 # connectivity data path
 fc_data_path = os.path.join(
     results,
-    f"connectomes_nparcels-{n_parcels}_tasktype-domain_trim-{trim}.pkl",
+    f"connectomes_nparcels-{n_parcels}_tasktype-natural_trim-{trim}.pkl",
 )
 
 
